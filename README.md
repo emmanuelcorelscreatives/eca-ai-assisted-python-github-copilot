@@ -4,6 +4,8 @@ Emmanuel Corels Academy
 
 Learn a practical workflow for building Python software with AI assistance and independent judgment. You’ll develop a single-user expense tracker in small, reviewable steps: define its behavior, validate input, store records safely, test important cases and investigate a real defect. By the end, you’ll have a repository containing the application, tests, a CI workflow, setup guidance and a record of the AI suggestions you accepted, changed or rejected. Basic Python familiarity is recommended. The course includes 12 hours of planned video and suggests an additional 12 hours 45 minutes of independent practice. You’ll need Python, VS Code, Git and internet access; direct Copilot experience requires access supported by your editor and account.
 
+[Runnable practice example and setup](practice/README.md)
+
 ## Course materials
 
 - [1. Course Introduction and Landing-Page Video](lessons/01-course-introduction-and-landing-page-video/README.md)
