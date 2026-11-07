@@ -101,3 +101,5 @@ application. It has no authentication, network service, export command, automati
 backup, concurrent-user coordination or currency conversion. Those limits can
 inform a small, testable next iteration. The original saved lesson resources are
 under `docs/source-requirements`; the presentation worksheet remains unfilled.
+
+[Current implementation review and recorded evidence](docs/decision_log.md)
