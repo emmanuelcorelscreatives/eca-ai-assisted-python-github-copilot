@@ -6,6 +6,11 @@ Learn a practical workflow for building Python software with AI assistance and i
 
 [Runnable practice example and setup](practice/README.md)
 
+[Runnable capstone demonstration for lessons 71–72](examples/capstone/README.md)
+includes the authored three-expense walkthrough, filtering, exact summaries,
+deletion and restart persistence. Its separate Capstone tests workflow verifies
+that example; it does not replace the smaller root practice application.
+
 ## Course materials
 
 - [1. Course Introduction and Landing-Page Video](lessons/01-course-introduction-and-landing-page-video/README.md)

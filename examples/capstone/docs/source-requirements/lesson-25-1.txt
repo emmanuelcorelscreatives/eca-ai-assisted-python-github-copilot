@@ -1,0 +1,45 @@
+VALIDATED ADD-PATH REVIEW
+
+Input routing
+[ ] The add command passes amount, date, category, and optional description to the application service.
+[ ] The command handler does not duplicate the field-validation rules.
+[ ] The application service calls one shared validator before calling the repository.
+[ ] The repository receives an ExpenseDraft rather than raw command strings.
+
+Amount
+[ ] Amount text is converted directly to Decimal, not through float.
+[ ] Invalid decimal text is rejected.
+[ ] NaN and Infinity are rejected.
+[ ] Non-positive values are rejected.
+[ ] Values outside the allowed decimal precision are rejected.
+
+Date
+[ ] The required calendar format is parsed strictly.
+[ ] Impossible calendar dates are rejected.
+[ ] Dates later than the current day are rejected.
+
+Category and description
+[ ] Surrounding category whitespace is removed.
+[ ] A blank category is rejected.
+[ ] A category longer than 40 characters is rejected rather than truncated.
+[ ] An omitted or whitespace-only description becomes None.
+[ ] A nonempty description longer than 200 characters is rejected rather than truncated.
+
+Write boundary
+[ ] ExpenseDraft is constructed only after every field is valid.
+[ ] repository.add is located after validation returns successfully.
+[ ] ValidationError leaves the service before repository.add can run.
+[ ] The command catches ValidationError specifically and does not disguise unrelated failures as invalid input.
+[ ] The invalid-input checks use a repository that fails immediately if add is called.
+[ ] The valid-input check confirms that the repository receives normalized values.
+
+Verification command
+python -m pytest tests/test_add_expense.py -q
+
+Manual invalid example
+python -m expense_tracker add --amount NaN --date 2024-01-01 --category Food
+
+Expected behavior for the invalid example
+- An amount-specific validation error is written to standard error.
+- No success message is printed.
+- No repository write is attempted.

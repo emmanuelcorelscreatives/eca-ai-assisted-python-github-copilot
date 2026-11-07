@@ -1,0 +1,39 @@
+FINAL PROJECT PRESENTATION WORKSHEET
+
+Repository revision presented: __________
+README location: __________
+Successful workflow run for this revision: __________
+
+Presentation path
+1. Working tracker: state the local, single-user purpose; point to one successful action and one invalid-input rejection from your own demonstration.
+   Evidence: __________
+2. Architecture: trace one add request through the actual command-line, validation, application-service, repository, and SQLite boundaries. Record the real file/function names.
+   Evidence and names: __________
+3. Independently diagnosed bug: required behavior __________; smallest reproduction __________; observed mismatch __________; cause and supporting evidence __________; regression test __________; repair __________.
+4. Testing strategy: pure-rule test __________; disposable SQLite test __________; command-line test __________. State the different requirement each checks.
+5. AI suggestion decision: accepted / modified / rejected __________; requirement checked __________; reason and evidence __________.
+6. Workflow evidence: run __________; revision __________; test job __________.
+7. Next improvement, separate from the finished local core: documented need __________; small observable result __________; first test __________; why this comes next __________.
+
+120-minute practice plan
+[ ] 20 minutes: follow the README from a fresh setup and check its documented test command; record and correct failures.
+[ ] 30 minutes: gather command, test, workflow, and review-log evidence for the presented revision.
+[ ] 30 minutes: rehearse the architecture and bug explanations against the real files.
+[ ] 20 minutes: check acceptance criteria and close presentation gaps.
+[ ] 20 minutes: write the next-improvement proposal and deliver the presentation once without stopping.
+
+Self-assessment: enter earned points, with evidence for each score.
+Functionality and validation: ____ / 25. Evidence: __________
+Tests: ____ / 25. Evidence: __________
+Review and security decisions: ____ / 20. Evidence: __________
+Debugging and refactoring: ____ / 15. Evidence: __________
+Continuous integration and reproducibility: ____ / 10. Evidence: __________
+Documentation: ____ / 5. Evidence: __________
+Total: ____ / 100. Suggested target: at least 70.
+
+Must-fix before acceptance, regardless of score:
+[ ] No calculation error remains in the required totals.
+[ ] Invalid input is not persisted.
+[ ] SQL operations do not use unsafe value interpolation.
+
+Do not award points for intended work without evidence. Note any remaining limitation and keep the proposed next improvement separate from the finished core.
