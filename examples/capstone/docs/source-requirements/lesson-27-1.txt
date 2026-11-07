@@ -1,0 +1,138 @@
+Save as listing_demo.py. From the directory containing the file, run python listing_demo.py list or python listing_demo.py summary. On Windows installations that use the Python launcher, use py in place of python.
+
+```python
+import argparse
+from datetime import date
+import sqlite3
+
+
+def parse_filter_date(value):
+    if value is None:
+        return None
+    try:
+        parsed = date.fromisoformat(value)
+    except ValueError:
+        raise ValueError("dates must use YYYY-MM-DD") from None
+    if parsed.isoformat() != value:
+        raise ValueError("dates must use YYYY-MM-DD")
+    return value
+
+
+def select_expenses(connection, start=None, end=None, category=None):
+    start = parse_filter_date(start)
+    end = parse_filter_date(end)
+    if start is not None and end is not None and start > end:
+        raise ValueError("start must not be after end")
+    if category is not None and not category:
+        raise ValueError("category must not be empty")
+
+    sql = "SELECT id, spent_on, category, amount_minor FROM expenses WHERE 1 = 1"
+    parameters = []
+    if start is not None:
+        sql += " AND spent_on >= ?"
+        parameters.append(start)
+    if end is not None:
+        sql += " AND spent_on <= ?"
+        parameters.append(end)
+    if category is not None:
+        sql += " AND category = ?"
+        parameters.append(category)
+    sql += " ORDER BY spent_on ASC, id ASC"
+    return connection.execute(sql, parameters).fetchall()
+
+
+def summarize(rows):
+    overall = 0
+    by_category = {}
+    for row in rows:
+        amount_minor = row["amount_minor"]
+        overall += amount_minor
+        category = row["category"]
+        by_category[category] = by_category.get(category, 0) + amount_minor
+    return overall, by_category
+
+
+def format_amount(amount_minor):
+    # The existing creation contract admits positive expense amounts.
+    whole, cents = divmod(amount_minor, 100)
+    return f"{whole}.{cents:02d}"
+
+
+def seed_example(connection):
+    connection.execute(
+        "CREATE TABLE expenses ("
+        "id INTEGER PRIMARY KEY, "
+        "spent_on TEXT NOT NULL, "
+        "category TEXT NOT NULL, "
+        "amount_minor INTEGER NOT NULL)"
+    )
+    connection.executemany(
+        "INSERT INTO expenses (id, spent_on, category, amount_minor) "
+        "VALUES (?, ?, ?, ?)",
+        [
+            (1, "2026-04-01", "Food", 1250),
+            (2, "2026-04-02", "Travel", 4000),
+            (3, "2026-04-02", "Food", 375),
+            (4, "2026-04-03", "Food", 600),
+        ],
+    )
+    connection.commit()
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    subcommands = parser.add_subparsers(dest="command", required=True)
+    for name in ("list", "summary"):
+        command = subcommands.add_parser(name)
+        command.add_argument("--start")
+        command.add_argument("--end")
+        command.add_argument("--category")
+    args = parser.parse_args()
+
+    connection = sqlite3.connect(":memory:")
+    connection.row_factory = sqlite3.Row
+    try:
+        seed_example(connection)
+        try:
+            rows = select_expenses(
+                connection, start=args.start, end=args.end, category=args.category
+            )
+        except ValueError as exc:
+            parser.error(str(exc))
+
+        if args.command == "list":
+            if not rows:
+                print("No expenses match those filters.")
+            for row in rows:
+                print(
+                    f'#{row["id"]} | {row["spent_on"]} | '
+                    f'{row["category"]} | {format_amount(row["amount_minor"])}'
+                )
+        else:
+            overall, by_category = summarize(rows)
+            print(f"Overall: {format_amount(overall)}")
+            if not rows:
+                print("No expenses match those filters.")
+            for category in sorted(by_category):
+                print(f"{category}: {format_amount(by_category[category])}")
+    finally:
+        connection.close()
+
+
+if __name__ == "__main__":
+    main()
+```
+
+Useful comparisons:
+
+```text
+python listing_demo.py list
+python listing_demo.py list --category Food
+python listing_demo.py list --start 2026-04-02 --end 2026-04-03 --category Food
+python listing_demo.py list --start 2026-04-03 --end 2026-04-02
+python listing_demo.py list --category Books
+python listing_demo.py summary
+python listing_demo.py summary --start 2026-04-02 --end 2026-04-03 --category Food
+python listing_demo.py summary --start 2026-04-03 --end 2026-04-03 --category Food
+python listing_demo.py summary --category Books
+```
