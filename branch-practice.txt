@@ -1,0 +1,3 @@
+Branch practice
+Keep each commit about one related change.
+Review the staged diff before committing.
