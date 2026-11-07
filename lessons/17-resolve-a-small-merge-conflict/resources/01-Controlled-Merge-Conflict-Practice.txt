@@ -1,0 +1,67 @@
+Start from a committed, clean baseline.
+
+Baseline file: src/expense_tracker/practice_conflict.py
+
+def format_total(amount: str) -> str:
+    return f"Total: {amount}"
+
+Baseline file: tests/test_practice_conflict.py
+
+from expense_tracker.practice_conflict import format_total
+
+
+def test_format_total_preserves_amount():
+    assert format_total("12.50").endswith("12.50")
+
+Create and commit the label change:
+
+git switch main
+git status --short
+git switch -c practice/label-change
+
+Edit src/expense_tracker/practice_conflict.py to contain:
+
+def format_total(amount: str) -> str:
+    return f"Overall total: {amount}"
+
+Then run:
+
+git add src/expense_tracker/practice_conflict.py
+git commit -m "Clarify total label"
+git switch main
+
+Edit src/expense_tracker/practice_conflict.py to contain:
+
+def format_total(amount: str) -> str:
+    return f"Total: USD {amount}"
+
+Commit the currency change and begin the merge:
+
+git add src/expense_tracker/practice_conflict.py
+git commit -m "Show total currency"
+git merge practice/label-change
+
+Inspect the unresolved conflict:
+
+git status --short
+git diff --name-only --diff-filter=U
+
+Resolve src/expense_tracker/practice_conflict.py to contain:
+
+def format_total(amount: str) -> str:
+    return f"Overall total: USD {amount}"
+
+Stage and review the resolution:
+
+git add src/expense_tracker/practice_conflict.py
+git status --short
+git diff --cached -- src/expense_tracker/practice_conflict.py
+
+Run the affected test before completing the merge:
+
+python -m pytest tests/test_practice_conflict.py -q
+
+After the test passes and the staged diff matches the intended behavior, complete the merge:
+
+git commit -m "Merge label and currency formatting"
+git status --short

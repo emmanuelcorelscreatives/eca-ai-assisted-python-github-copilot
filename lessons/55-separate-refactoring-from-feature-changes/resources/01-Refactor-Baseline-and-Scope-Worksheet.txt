@@ -1,0 +1,88 @@
+# Refactor Baseline and Scope Worksheet
+
+Project or branch:
+
+## 1. Baseline gate
+Run and record the actual result of:
+
+- `git status --short`
+- `python -m pytest`
+
+Do not begin while there are unexplained working-tree changes or existing test failures.
+
+## 2. Agreed behavior that must remain stable
+Describe observable behavior, not internal implementation.
+
+- Public command names and options:
+- Accepted valid inputs:
+- Rejected invalid inputs:
+- Normal output:
+- Error output:
+- Exit status:
+- Record ordering and totals:
+- Stored-data effects:
+- Existing-data compatibility:
+
+Stable-behavior statement:
+
+____________________________________________________________________
+
+## 3. Candidate structural improvement
+Selected improvement:
+
+____________________________________________________________________
+
+Why it improves the internal structure:
+
+____________________________________________________________________
+
+## 4. Refactor test
+Answer each question.
+
+1. Does the user enter anything new or different? Yes / No
+2. Can output, errors, exit status, ordering, or stored data change? Yes / No
+3. Must an acceptance criterion be rewritten? Yes / No
+
+Any yes answer means the proposal contains behavioral work that should be separated from the refactor.
+
+## 5. Scope
+In scope:
+
+- 
+- 
+
+Out of scope:
+
+- 
+- 
+
+Expected changed files:
+
+- 
+
+Expected shape of the diff:
+
+____________________________________________________________________
+
+## 6. Stop rule
+Reject or separate any edit outside the stated scope, even if tests pass.
+
+## Completed example
+
+Stable behavior: Command names, options, accepted inputs, output, errors, exit status, ordering, totals, and SQLite effects remain unchanged.
+
+Selected improvement: Rename the private helper `_line` to `_format_expense_line` and update only its references.
+
+Reason: The new name states that the helper formats one expense for command-line output.
+
+In scope:
+- Rename `_line`.
+- Update its two occurrences in `src/expense_tracker/cli.py`.
+
+Out of scope:
+- Function body or signature changes.
+- Output formatting or ordering.
+- Validation, filtering, totals, or deletion changes.
+- Database, dependency, or public-interface changes.
+
+Expected diff: One private symbol rename in `src/expense_tracker/cli.py`; no behavioral changes.

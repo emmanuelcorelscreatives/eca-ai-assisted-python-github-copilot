@@ -1,0 +1,201 @@
+Example interface contract
+==========================
+These tests use the demonstration project interfaces shown in the lesson. If your audited project uses different import names, command options, messages, or exit codes, change those details to match the written contract rather than the current implementation.
+
+File: tests/test_domain.py
+--------------------------
+from datetime import date
+from decimal import Decimal
+
+import pytest
+
+from expense_tracker.domain import parse_amount, parse_date, summarize_by_category
+from expense_tracker.models import Expense
+
+
+def test_parse_amount_accepts_smallest_valid_amount():
+    assert parse_amount("0.01") == Decimal("0.01")
+
+
+@pytest.mark.parametrize("raw", ["0", "-0.01", "NaN", "Infinity"])
+def test_parse_amount_rejects_non_positive_or_non_finite_values(raw):
+    with pytest.raises(ValueError):
+        parse_amount(raw)
+
+
+def test_parse_date_accepts_real_leap_day():
+    assert parse_date("2024-02-29") == date(2024, 2, 29)
+
+
+@pytest.mark.parametrize("raw", ["2025-02-29", "03/08/2025"])
+def test_parse_date_rejects_invalid_or_ambiguous_dates(raw):
+    with pytest.raises(ValueError):
+        parse_date(raw)
+
+
+def test_summarize_uses_independently_derived_expected_totals():
+    expenses = [
+        Expense(
+            id=1,
+            amount=Decimal("4.25"),
+            spent_on=date(2025, 3, 8),
+            category="food",
+            description="Breakfast",
+        ),
+        Expense(
+            id=2,
+            amount=Decimal("6.00"),
+            spent_on=date(2025, 3, 8),
+            category="food",
+            description="Lunch",
+        ),
+        Expense(
+            id=3,
+            amount=Decimal("2.75"),
+            spent_on=date(2025, 3, 9),
+            category="travel",
+            description="Bus",
+        ),
+    ]
+
+    summary = summarize_by_category(expenses)
+
+    assert summary.overall == Decimal("13.00")
+    assert summary.by_category == {
+        "food": Decimal("10.25"),
+        "travel": Decimal("2.75"),
+    }
+
+
+File: tests/test_repository.py
+------------------------------
+from datetime import date
+from decimal import Decimal
+
+from expense_tracker.models import NewExpense
+from expense_tracker.repository import SQLiteExpenseRepository
+
+
+def test_expense_survives_repository_reopen(tmp_path):
+    db_path = tmp_path / "expenses.db"
+
+    writer = SQLiteExpenseRepository(db_path)
+    try:
+        saved = writer.add(
+            NewExpense(
+                amount=Decimal("12.50"),
+                spent_on=date(2025, 3, 8),
+                category="food",
+                description="Lunch",
+            )
+        )
+        saved_id = saved.id
+    finally:
+        writer.close()
+
+    assert saved_id is not None
+
+    reader = SQLiteExpenseRepository(db_path)
+    try:
+        loaded = reader.get(saved_id)
+    finally:
+        reader.close()
+
+    assert loaded is not None
+    assert loaded.id == saved_id
+    assert loaded.amount == Decimal("12.50")
+    assert loaded.spent_on == date(2025, 3, 8)
+    assert loaded.category == "food"
+    assert loaded.description == "Lunch"
+
+
+File: tests/test_cli.py
+-----------------------
+from pathlib import Path
+import subprocess
+import sys
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+
+def run_cli(db_path, *arguments):
+    return subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "expense_tracker",
+            "--database",
+            str(db_path),
+            *arguments,
+        ],
+        cwd=PROJECT_ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+
+def test_add_then_list_end_to_end(tmp_path):
+    db_path = tmp_path / "expenses.db"
+
+    added = run_cli(
+        db_path,
+        "add",
+        "--amount",
+        "12.50",
+        "--date",
+        "2025-03-08",
+        "--category",
+        "food",
+        "--description",
+        "Lunch",
+    )
+
+    assert added.returncode == 0
+    assert added.stdout == "Added expense 1.\n"
+    assert added.stderr == ""
+
+    listed = run_cli(db_path, "list")
+
+    assert listed.returncode == 0
+    assert listed.stdout == "1 | 2025-03-08 | food | 12.50 | Lunch\n"
+    assert listed.stderr == ""
+
+
+def test_invalid_amount_reports_error_without_writing(tmp_path):
+    db_path = tmp_path / "expenses.db"
+
+    rejected = run_cli(
+        db_path,
+        "add",
+        "--amount",
+        "0",
+        "--date",
+        "2025-03-08",
+        "--category",
+        "food",
+        "--description",
+        "Lunch",
+    )
+
+    assert rejected.returncode == 2
+    assert rejected.stdout == ""
+    assert rejected.stderr == "Error: amount must be a positive finite decimal.\n"
+
+    listed = run_cli(db_path, "list")
+
+    assert listed.returncode == 0
+    assert listed.stdout == "No expenses found.\n"
+    assert listed.stderr == ""
+
+
+Focused commands
+================
+python -m pytest tests/test_domain.py -q
+python -m pytest tests/test_repository.py -q
+python -m pytest tests/test_cli.py -q
+
+Complete local command
+======================
+python -m pytest

@@ -1,0 +1,45 @@
+Create the following files in one starter folder. Use the Python environment and development dependencies established earlier in the course.
+
+--- README.md ---
+# Expense tracker reference starter
+
+From this folder, run the application:
+
+    python -m expense_tracker
+
+Run the initial smoke test:
+
+    python -m pytest tests/test_smoke.py
+
+If pytest is missing from the intended project environment, install the development dependencies into that environment:
+
+    python -m pip install -r requirements-dev.txt
+
+--- requirements-dev.txt ---
+pytest>=8,<10
+
+--- expense_tracker/__init__.py ---
+
+--- expense_tracker/__main__.py ---
+def main() -> None:
+    print("Expense tracker starter ready")
+
+
+if __name__ == "__main__":
+    main()
+
+--- tests/test_smoke.py ---
+from expense_tracker.__main__ import main
+
+
+def test_starter_runs(capsys):
+    main()
+    captured = capsys.readouterr()
+    assert captured.out == "Expense tracker starter ready\n"
+
+--- .gitignore ---
+.venv/
+.diagnostic-venv/
+__pycache__/
+.pytest_cache/
+*.pyc

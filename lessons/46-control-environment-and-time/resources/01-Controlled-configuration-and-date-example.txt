@@ -1,0 +1,58 @@
+config.py
+
+import os
+
+
+def database_path() -> str:
+    return os.environ.get("EXPENSE_DB_PATH", "expenses.sqlite3")
+
+
+expense_dates.py
+
+from collections.abc import Callable
+from datetime import date
+
+
+def validate_expense_date(
+    expense_day: date, today: Callable[[], date] = date.today
+) -> None:
+    if expense_day > today():
+        raise ValueError("expense date cannot be in the future")
+
+
+tests/test_controlled_inputs.py
+
+from datetime import date
+
+import pytest
+
+from config import database_path
+from expense_dates import validate_expense_date
+
+
+def test_database_path_uses_environment(monkeypatch, tmp_path):
+    chosen_path = tmp_path / "test.sqlite3"
+    monkeypatch.setenv("EXPENSE_DB_PATH", str(chosen_path))
+    assert database_path() == str(chosen_path)
+
+
+def test_database_path_uses_default(monkeypatch):
+    monkeypatch.delenv("EXPENSE_DB_PATH", raising=False)
+    assert database_path() == "expenses.sqlite3"
+
+
+def fixed_today() -> date:
+    return date(2030, 6, 15)
+
+
+def test_today_and_earlier_are_allowed():
+    validate_expense_date(date(2030, 6, 14), today=fixed_today)
+    validate_expense_date(date(2030, 6, 15), today=fixed_today)
+
+
+def test_future_date_is_rejected():
+    with pytest.raises(ValueError, match="expense date cannot be in the future"):
+        validate_expense_date(date(2030, 6, 16), today=fixed_today)
+
+Run from the directory containing config.py and expense_dates.py:
+python -m pytest tests/test_controlled_inputs.py -q

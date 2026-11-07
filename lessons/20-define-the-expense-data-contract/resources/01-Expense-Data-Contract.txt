@@ -1,0 +1,130 @@
+# Expense Data Contract
+
+## Configuration
+
+- Configured currency: USD
+- Currency decimal places: 2
+- `database_path` is configurable.
+- The tracker must not silently use a different database if the configured path cannot be used.
+
+## Expense record
+
+- `id`: storage-assigned positive integer
+- `amount_minor`: validated amount represented as an exact integer number of minor units
+- `date`: calendar date in `YYYY-MM-DD` form
+- `category`: one documented category value
+- `description`: text from 0 through 200 characters
+
+## Amount input
+
+- Input is a decimal string containing digits, optionally followed by a decimal point and one or two fractional digits.
+- Parse the original string directly with Python `Decimal`.
+- Do not convert the input through `float`.
+- Reject currency symbols, thousands separators, exponent notation, and more than two fractional digits.
+- Reject `NaN`, `Infinity`, and every other non-finite value.
+- Reject zero and negative amounts.
+- Reject over-precise input rather than rounding it.
+
+Accepted examples:
+
+- `12`
+- `12.3`
+- `12.30`
+- `0.01`
+
+Rejected examples:
+
+- `$12.30`
+- `1,000.00`
+- `1e2`
+- `NaN`
+- `Infinity`
+- `0`
+- `-2.50`
+- `12.345`
+- `12.300`
+
+## Amount representation
+
+- Store a validated amount as an exact integer named `amount_minor`.
+- For USD, one minor unit is one cent.
+- `12.30` becomes `1230`.
+- `12.3` becomes `1230`.
+- `0.01` becomes `1`.
+- Reject over-precise input before conversion; no rounding rule applies.
+- `amount_minor` is the authoritative stored amount.
+
+## Dates
+
+- Use the ISO calendar form `YYYY-MM-DD`.
+- The value must represent a real calendar date.
+- Reject date-and-time values, localized date forms, and impossible dates.
+- The expense date must be no later than the supplied `current_day`.
+- If `current_day` is `2026-04-15`, accept `2026-04-15` and reject `2026-04-16`.
+
+For a date range:
+
+- `start_date` must be less than or equal to `end_date`.
+- Both endpoints are inclusive.
+- A one-day range with equal endpoints is valid.
+
+## Category
+
+Allowed values:
+
+- `food`
+- `transport`
+- `housing`
+- `utilities`
+- `health`
+- `entertainment`
+- `other`
+
+Rules:
+
+- Trim surrounding whitespace before validation.
+- Reject an empty or whitespace-only value.
+- Match the documented lowercase values exactly.
+- Do not assume unlisted case conversion or synonyms.
+- Input ` food ` is normalized to `food`.
+
+## Description
+
+- Description is text from 0 through 200 characters.
+- Accept exactly 200 characters.
+- Reject 201 or more characters.
+- Reject excess text rather than truncating it.
+
+## Identity
+
+- `id` is a storage-assigned positive integer.
+- An add request does not provide `id`.
+- Return `id` only as part of a committed success.
+- Identical valid submissions create separate records with separate identifiers.
+- The contract does not promise consecutive identifiers.
+
+## Error behavior
+
+- Invalid input returns a validation failure identifying the field and broken rule.
+- A request containing invalid input is not stored.
+- If several fields are invalid, the tracker may report one or more failures, but it must not store the request.
+- Database open, write, or commit errors return a storage failure.
+- Do not report success before the transaction commits.
+- If commit fails, do not return a successful result or claim that the expense was saved.
+
+## Boundary examples
+
+| Example | Required outcome |
+|---|---|
+| Amount `12.30` | Accept as `1230` minor units |
+| Amount `12.345` | Reject for excess precision |
+| Date equals `current_day` | Accept |
+| Date is later than `current_day` | Reject |
+| Date range has equal endpoints | Accept and include that date |
+| Date range starts after it ends | Reject |
+| Category ` food ` | Accept as `food` |
+| Empty category | Reject |
+| Description length is 200 | Accept |
+| Description length is 201 | Reject |
+| Repeat an identical valid submission | Create a separate expense |
+| Database commit fails | Return storage failure and do not report success |

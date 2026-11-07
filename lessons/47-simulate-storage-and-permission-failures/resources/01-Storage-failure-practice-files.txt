@@ -1,0 +1,40 @@
+expense_app.py
+
+import sqlite3
+import sys
+
+
+def add_expense(repository, expense):
+    try:
+        repository.add(expense)
+    except sqlite3.Error:
+        print('Could not save expense.', file=sys.stderr)
+        return 1
+    print('Expense saved.')
+    return 0
+
+
+tests/test_storage_failure.py
+
+import sqlite3
+
+from expense_app import add_expense
+
+
+class ReadOnlyRepository:
+    def add(self, expense):
+        raise sqlite3.OperationalError('attempt to write a readonly database')
+
+
+def test_add_reports_storage_failure(capsys):
+    expense = {'amount': '12.50', 'category': 'food'}
+    status = add_expense(ReadOnlyRepository(), expense)
+    output = capsys.readouterr()
+
+    assert status == 1
+    assert output.out == ''
+    assert output.err == 'Could not save expense.\n'
+    assert 'Expense saved.' not in output.out + output.err
+
+Run from the project directory:
+python -m pytest -q tests/test_storage_failure.py

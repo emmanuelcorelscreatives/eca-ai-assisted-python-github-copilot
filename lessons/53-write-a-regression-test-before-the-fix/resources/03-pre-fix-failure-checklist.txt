@@ -1,0 +1,10 @@
+- Use the smallest input that reproduces the behavior.
+- Derive the expected result from the requirement or independent arithmetic.
+- Do not copy the current incorrect output into the assertion.
+- Do not calculate the expected result with the function under test.
+- Assert the complete observable result, not a weak condition that other wrong answers could satisfy.
+- Run the focused test before changing production code.
+- Confirm that pytest collects and runs the intended test.
+- Confirm that execution reaches the behavioral assertion.
+- Match the actual-versus-expected mismatch to the reproduced defect.
+- Treat import, fixture, spelling, and unrelated exception errors as test-harness problems rather than proof of the defect.

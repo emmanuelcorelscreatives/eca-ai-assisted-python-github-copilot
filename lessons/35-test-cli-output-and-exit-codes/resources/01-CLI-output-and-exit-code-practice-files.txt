@@ -1,0 +1,49 @@
+Create demo_cli.py in the project root:
+
+import argparse
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("category", choices=("food", "travel"))
+    args = parser.parse_args()
+    print(f"Category accepted: {args.category}")
+
+
+if __name__ == "__main__":
+    main()
+
+Create tests/test_cli.py:
+
+from pathlib import Path
+import subprocess
+import sys
+
+
+CLI = Path(__file__).resolve().parents[1] / "demo_cli.py"
+
+
+def run_cli(*args):
+    return subprocess.run(
+        [sys.executable, str(CLI), *args],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+
+def test_valid_category():
+    result = run_cli("food")
+    assert result.returncode == 0
+    assert result.stdout == "Category accepted: food\n"
+    assert result.stderr == ""
+
+
+def test_invalid_category():
+    result = run_cli("rent")
+    assert result.returncode != 0
+    assert result.stdout == ""
+    assert "invalid choice" in result.stderr
+    assert "'rent'" in result.stderr
+
+From the project root, run: python -m pytest -q tests/test_cli.py

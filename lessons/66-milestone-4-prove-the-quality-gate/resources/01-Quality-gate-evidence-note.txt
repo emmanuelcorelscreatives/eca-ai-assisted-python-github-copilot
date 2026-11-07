@@ -1,0 +1,20 @@
+Practice branch: practice/quality-gate-proof
+Workflow file and pytest command: ____________________
+
+Deliberately failing run
+Commit identifier: ____________________
+GitHub Actions run link: ____________________
+Did the job reach python -m pytest? ____________________
+Was tests/test_quality_gate_probe.py collected? ____________________
+Were the intended tracker tests collected and run? ____________________
+Observed assertion failure: ____________________
+
+Corrected passing run
+Commit identifier: ____________________
+GitHub Actions run link: ____________________
+Did the same workflow run python -m pytest? ____________________
+Were the probe and intended tracker tests collected and run? ____________________
+Were any relevant tests skipped? ____________________
+Observed pytest outcome: ____________________
+
+Compare the commits: the correction changes only the probe's expected value from Decimal("3.51") to Decimal("3.50"). Retain the run links or screenshots with the practice-branch evidence.

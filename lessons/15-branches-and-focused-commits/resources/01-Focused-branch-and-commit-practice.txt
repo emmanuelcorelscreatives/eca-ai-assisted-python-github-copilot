@@ -1,0 +1,25 @@
+Start in a Git repository with a clean working tree. Inspect any entries from the first command before proceeding.
+
+git status --short
+git branch --show-current
+git switch -c feature/branch-practice
+
+Create and save branch-practice.txt at the repository root with these lines:
+Branch practice
+Keep each commit about one related change.
+Review the staged diff before committing.
+
+Inspect and stage only that file:
+git status --short
+git add -- branch-practice.txt
+git diff --cached --name-only
+git diff --cached -- branch-practice.txt
+
+Commit only if the staged patch matches the intended change:
+git commit -m "docs: add branch practice note"
+
+Check the recorded commit and remaining working tree:
+git show --stat --oneline HEAD
+git show --format= -- branch-practice.txt
+git status --short
+git branch --show-current

@@ -1,0 +1,35 @@
+Save as expense_trace.py:
+
+label = "Lunch"
+amount = 12
+approved = False
+tags = ["food", "weekday"]
+expense = {
+    "label": label,
+    "amount": amount,
+    "approved": approved,
+    "tags": tags,
+}
+
+label = "Dinner"
+amount = amount + 3
+tags.append("receipt")
+expense["approved"] = True
+expense["amount"] = amount
+
+description = expense["label"] + ": $" + str(expense["amount"])
+count = len(expense["tags"])
+print(label)
+print(expense)
+print(description)
+print(count)
+
+Before running, write the final values of label, amount, approved, tags, expense["label"], expense["amount"], expense["approved"], expense["tags"], description, and count. Then predict all four printed lines.
+
+Answer key: label = "Dinner"; amount = 15; approved = False; tags = ["food", "weekday", "receipt"]; expense["label"] = "Lunch"; expense["amount"] = 15; expense["approved"] = True; expense["tags"] = ["food", "weekday", "receipt"]; description = "Lunch: $15"; count = 3.
+
+Expected printed output:
+Dinner
+{'label': 'Lunch', 'amount': 15, 'approved': True, 'tags': ['food', 'weekday', 'receipt']}
+Lunch: $15
+3

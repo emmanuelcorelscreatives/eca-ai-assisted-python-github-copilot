@@ -1,0 +1,39 @@
+Save as tests/test_boundaries.py:
+
+import pytest
+
+from expense_tracker.validation import amount_is_valid, date_is_valid
+
+
+@pytest.mark.parametrize(
+    ('raw', 'expected'),
+    [
+        pytest.param('0.01', True, id='smallest-positive-cent'),
+        pytest.param(' 12.50 ', True, id='surrounding-whitespace'),
+        pytest.param('', False, id='empty'),
+        pytest.param('0', False, id='zero'),
+        pytest.param('-0.01', False, id='negative'),
+        pytest.param('1.234', False, id='more-than-two-decimal-places'),
+        pytest.param('NaN', False, id='not-a-number'),
+        pytest.param('Infinity', False, id='positive-infinity'),
+        pytest.param('-Infinity', False, id='negative-infinity'),
+    ],
+)
+def test_amount_boundaries(raw: str, expected: bool) -> None:
+    assert amount_is_valid(raw) is expected
+
+
+@pytest.mark.parametrize(
+    ('raw', 'expected'),
+    [
+        pytest.param('2024-02-29', True, id='leap-day'),
+        pytest.param(' 2025-01-31 ', True, id='surrounding-whitespace'),
+        pytest.param('', False, id='empty'),
+        pytest.param('2023-02-29', False, id='non-leap-day'),
+        pytest.param('2025-02-30', False, id='invalid-day'),
+        pytest.param('2025-13-01', False, id='invalid-month'),
+        pytest.param('03/04/2025', False, id='wrong-format'),
+    ],
+)
+def test_date_boundaries(raw: str, expected: bool) -> None:
+    assert date_is_valid(raw) is expected

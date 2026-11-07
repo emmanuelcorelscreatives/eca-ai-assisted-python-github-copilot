@@ -1,0 +1,74 @@
+Create an empty expense_tracker/__init__.py. Save the following two files, then run python -m pytest -q tests/test_repository_persistence.py from the project root.
+
+# expense_tracker/repository.py
+import sqlite3
+from dataclasses import dataclass
+from decimal import Decimal
+from pathlib import Path
+
+
+@dataclass(frozen=True)
+class Expense:
+    id: int
+    category: str
+    amount: Decimal
+
+
+class SQLiteExpenseRepository:
+    def __init__(self, db_path: Path):
+        self._connection = sqlite3.connect(db_path)
+
+    def create_schema(self) -> None:
+        self._connection.execute(
+            "CREATE TABLE IF NOT EXISTS expenses ("
+            "id INTEGER PRIMARY KEY, "
+            "category TEXT NOT NULL, "
+            "amount TEXT NOT NULL)"
+        )
+        self._connection.commit()
+
+    def add(self, category: str, amount: Decimal) -> int:
+        cursor = self._connection.execute(
+            "INSERT INTO expenses (category, amount) VALUES (?, ?)",
+            (category, str(amount)),
+        )
+        self._connection.commit()
+        return cursor.lastrowid
+
+    def get(self, expense_id: int) -> Expense | None:
+        row = self._connection.execute(
+            "SELECT id, category, amount FROM expenses WHERE id = ?",
+            (expense_id,),
+        ).fetchone()
+        if row is None:
+            return None
+        return Expense(row[0], row[1], Decimal(row[2]))
+
+    def close(self) -> None:
+        self._connection.close()
+
+
+# tests/test_repository_persistence.py
+from decimal import Decimal
+
+from expense_tracker.repository import Expense, SQLiteExpenseRepository
+
+
+def test_expense_survives_reopening_database(tmp_path):
+    db_path = tmp_path / "expenses.sqlite3"
+    first = SQLiteExpenseRepository(db_path)
+    try:
+        first.create_schema()
+        saved_id = first.add("Groceries", Decimal("12.40"))
+        before_close = first.get(saved_id)
+        assert saved_id > 0
+        assert before_close == Expense(saved_id, "Groceries", Decimal("12.40"))
+    finally:
+        first.close()
+
+    reopened = SQLiteExpenseRepository(db_path)
+    try:
+        after_reopen = reopened.get(saved_id)
+        assert after_reopen == Expense(saved_id, "Groceries", Decimal("12.40"))
+    finally:
+        reopened.close()

@@ -1,0 +1,37 @@
+Create these three files under tests/.
+
+# tests/conftest.py
+import sqlite3
+
+import pytest
+
+
+@pytest.fixture
+def expense_db(tmp_path):
+    connection = sqlite3.connect(tmp_path / "expenses.sqlite3")
+    connection.execute("CREATE TABLE expenses (id INTEGER PRIMARY KEY, category TEXT NOT NULL, amount TEXT NOT NULL)")
+    yield connection
+    connection.close()
+
+# tests/test_listing.py
+import pytest
+
+
+@pytest.fixture
+def food_case(expense_db):
+    expense_db.execute("INSERT INTO expenses (category, amount) VALUES (?, ?)", ("Food", "12.50"))
+    return expense_db
+
+
+def test_food_row(food_case):
+    rows = food_case.execute("SELECT category, amount FROM expenses").fetchall()
+    assert rows == [("Food", "12.50")]
+
+# tests/test_baseline.py
+def test_empty_start(expense_db):
+    count = expense_db.execute("SELECT COUNT(*) FROM expenses").fetchone()[0]
+    assert count == 0
+
+Run: python -m pytest tests/test_listing.py tests/test_baseline.py -q
+
+These miniature tests illustrate fixture dependencies and isolation. When organizing the expense-tracker tests, retain their existing repository calls and requirement-based assertions; move only repeated setup.

@@ -1,0 +1,74 @@
+SHARED-STATE DEMONSTRATION
+
+Save as tests/test_fixture_scope.py:
+
+import pytest
+
+
+@pytest.fixture(scope="module")
+def basket():
+    return []
+
+
+def test_first_adds_item(basket):
+    basket.append("coffee")
+    assert basket == ["coffee"]
+
+
+def test_second_starts_empty(basket):
+    assert basket == []
+
+Run the tests in the demonstrated order:
+
+python -m pytest -q tests/test_fixture_scope.py::test_first_adds_item tests/test_fixture_scope.py::test_second_starts_empty
+
+Replace the fixture with the function-scoped default:
+
+@pytest.fixture
+def basket():
+    return []
+
+Rerun the same command. Each test now receives a new list.
+
+YIELD CLEANUP DEMONSTRATION
+
+Save as tests/test_fixture_cleanup.py:
+
+import sqlite3
+
+import pytest
+
+
+@pytest.fixture
+def db_connection():
+    connection = sqlite3.connect(":memory:")
+    print("\nOPEN connection")
+    yield connection
+    connection.close()
+    print("\nCLOSE connection")
+
+
+def test_insert_expense(db_connection):
+    db_connection.execute(
+        "CREATE TABLE expenses (description TEXT NOT NULL)"
+    )
+    db_connection.execute(
+        "INSERT INTO expenses (description) VALUES (?)",
+        ("Lunch",),
+    )
+    row = db_connection.execute(
+        "SELECT description FROM expenses"
+    ).fetchone()
+    assert row == ("Lunch",)
+
+Run the cleanup example while allowing fixture output to appear:
+
+python -m pytest -q -s tests/test_fixture_cleanup.py
+
+Decision guide:
+- Start with function scope.
+- Use a wider scope only when setup cost justifies reuse and sharing cannot make tests depend on one another.
+- Put resource acquisition before yield.
+- Yield the resource requested by the test.
+- Put release operations such as close after yield.
+- Keep lifecycle ownership in the fixture instead of duplicating cleanup in test bodies.

@@ -1,0 +1,7 @@
+In this expense-tracker project, expense_tracker/service.py defines list_expenses(repo: ExpenseRepository, category: str | None = None) -> list[Expense]. It currently returns repo.list_all(). Expense has id and category fields. expense_tracker/repository.py provides ExpenseRepository.list_all(), which returns expenses in their existing order.
+
+Please propose the smallest patch that filters the returned expenses in the service. If category is None, return every expense in the existing order. Otherwise, match category exactly, preserve order, and return an empty list when there are no matches.
+
+Example: if list_all() returns (id=1, category="food"), (id=2, category="travel"), (id=3, category="food") in that order, category="food" returns IDs 1 and 3; category="books" returns []; category=None returns IDs 1, 2, and 3.
+
+Change only expense_tracker/service.py and focused tests in tests/test_service.py. Cover no filter, matching records, and no matches. Do not change the CLI, repository, schema, or unrelated behavior. If a needed interface or rule is unclear, say what you need to know rather than inventing it.

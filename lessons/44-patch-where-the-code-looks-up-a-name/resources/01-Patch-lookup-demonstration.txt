@@ -1,0 +1,51 @@
+Create this structure from the project root:
+
+patch_demo/
+    __init__.py
+    repository.py
+    service.py
+tests/
+    test_patch_location.py
+
+Leave patch_demo/__init__.py empty.
+
+patch_demo/repository.py
+
+def save_expense(expense: dict[str, str]) -> int:
+    return 7
+
+patch_demo/service.py
+
+from patch_demo.repository import save_expense
+
+
+def create_expense(expense: dict[str, str]) -> dict[str, str | int]:
+    expense_id = save_expense(expense)
+    return {**expense, "id": expense_id}
+
+tests/test_patch_location.py
+
+from unittest.mock import patch
+
+from patch_demo.service import create_expense
+
+
+def test_create_expense_uses_patched_identifier():
+    expense = {"amount": "12.50", "category": "food"}
+
+    with patch("patch_demo.service.save_expense", return_value=99):
+        result = create_expense(expense)
+
+    assert result["id"] == 99
+
+Run from the project root:
+
+python -m pytest tests/test_patch_location.py -q
+
+The test passes because create_expense reads patch_demo.service.save_expense.
+
+To reproduce the misplaced patch, change only the context-manager line to:
+
+with patch("patch_demo.repository.save_expense", return_value=99):
+
+Run the same command. The assertion reports 7 instead of 99 because the service still holds its directly imported reference. Restore the target to patch_demo.service.save_expense and run the test again.

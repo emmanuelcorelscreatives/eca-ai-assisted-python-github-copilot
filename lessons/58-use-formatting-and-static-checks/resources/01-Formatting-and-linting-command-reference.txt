@@ -1,0 +1,11 @@
+Install Ruff in the selected development environment: python -m pip install ruff
+Check the installed version: python -m ruff --version
+Check one file's formatting without changing it: python -m ruff format --check ruff_style_example.py
+Format that file: python -m ruff format ruff_style_example.py
+Lint that file: python -m ruff check ruff_style_example.py
+Check project formatting without changing files: python -m ruff format --check .
+Lint the project: python -m ruff check .
+Run behavioral tests: python -m pytest
+Inspect remaining project changes: git status --short
+
+Add Ruff to the project's development dependencies using its existing version policy. The example file is disposable: do not overwrite an existing file, and remove the example after the exercise.

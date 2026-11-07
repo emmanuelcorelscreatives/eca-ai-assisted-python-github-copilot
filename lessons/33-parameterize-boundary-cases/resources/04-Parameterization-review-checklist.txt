@@ -1,0 +1,12 @@
+[ ] Each table tests one behavior.
+[ ] Every input comes from a written rule or a boundary around that rule.
+[ ] Expected values are literal and independently derived from the requirement.
+[ ] Relevant valid edges appear beside invalid boundary cases.
+[ ] Empty input and surrounding whitespace have explicit rows.
+[ ] Zero and negative amounts have separate rows.
+[ ] Permitted and excess decimal precision are both represented.
+[ ] NaN, positive infinity, and negative infinity remain visible as distinct cases.
+[ ] Real and invalid calendar dates have separate rows.
+[ ] Every pytest.param row has a rule-focused ID.
+[ ] Collection output shows one test item per row.
+[ ] The complete relevant test file runs after any focused case run.

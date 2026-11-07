@@ -1,0 +1,8 @@
+For each changed line, compare it with the tracker contract.
+- Input boundary: Does every write still pass through shared validation? Are type hints being mistaken for runtime checks?
+- SQL: Are input values passed separately through placeholders? Does a delete distinguish one affected row from no matching row?
+- Files: Which configured path does each operation use? Is any creation, overwrite, or removal newly introduced and authorized?
+- Errors: Does a storage failure remain a failure? Does a broad exception handler hide unrelated defects or report success?
+- Dependencies: What packages were added, why are they needed, and where are they used?
+- Other effects: Does the change launch a process, install software, contact the network, or disclose expense data?
+Decision: Reject a proposal with a material unrequested effect or broken boundary; request a bounded revision, then inspect its new diff.

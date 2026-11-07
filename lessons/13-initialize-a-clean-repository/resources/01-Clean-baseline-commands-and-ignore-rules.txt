@@ -1,0 +1,38 @@
+Run from the project root. Inspect files before staging or committing.
+
+git init
+git status --short --untracked-files=all
+
+Create and save .gitignore with one entry per line:
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+*.sqlite3
+*.sqlite
+*.db
+local-data/
+expenses.csv
+.env
+.env.*
+*.pem
+*.key
+
+Check the inventory and example ignore matches:
+git status --short --untracked-files=all
+git check-ignore -v .venv/pyvenv.cfg local-data/expenses.csv .env expenses.sqlite3
+
+After reviewing file contents, stage only paths present in your project. For the practice folder shown:
+git add .gitignore README.md requirements-dev.txt src/ tests/
+git diff --cached --name-only
+git status --short
+
+Commit only if the staged list contains no local environments, personal data, databases, or credentials:
+git commit -m "Initialize expense tracker baseline"
+git status --short
+git log -1 --oneline
+
+.gitignore does not untrack previously tracked files or remove secrets from history. Replace or revoke an exposed credential.

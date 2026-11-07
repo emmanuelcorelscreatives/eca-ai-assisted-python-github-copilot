@@ -1,0 +1,27 @@
+Run these commands from the expense-tracker project folder.
+
+Windows PowerShell:
+python --version
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -c "import sys; print(sys.executable)"
+python -m pip install pytest ruff
+python -m pip show pytest ruff
+python -c "from importlib.metadata import version; print(version('pytest')); print(version('ruff'))"
+
+If PowerShell blocks activation, do not change its execution policy for this setup. Use the environment Python directly instead:
+.\.venv\Scripts\python.exe -m pip install pytest ruff
+.\.venv\Scripts\python.exe -m pip show pytest ruff
+.\.venv\Scripts\python.exe -c "import sys; print(sys.executable)"
+.\.venv\Scripts\python.exe -c "from importlib.metadata import version; print(version('pytest')); print(version('ruff'))"
+
+macOS or Linux, if Python 3 is named python3:
+python3 --version
+python3 -m venv .venv
+source .venv/bin/activate
+python -c "import sys; print(sys.executable)"
+python -m pip install pytest ruff
+python -m pip show pytest ruff
+python -c "from importlib.metadata import version; print(version('pytest')); print(version('ruff'))"
+
+In Visual Studio Code, use Python: Select Interpreter and choose the Python inside this project's .venv folder. Open a fresh integrated terminal and check sys.executable again. The printed path should refer to the same environment you selected in the editor.

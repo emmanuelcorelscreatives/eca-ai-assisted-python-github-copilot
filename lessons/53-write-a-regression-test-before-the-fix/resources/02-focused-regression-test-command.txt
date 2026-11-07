@@ -1,0 +1,1 @@
+python -m pytest tests/test_summary.py::test_calculate_total_includes_every_expense -q

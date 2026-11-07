@@ -1,0 +1,54 @@
+Requires Python 3.10 or later and pytest.
+
+File: expense_repo.py
+
+import sqlite3
+from pathlib import Path
+
+DEFAULT_DB_PATH = Path.home() / ".expense_tracker" / "expenses.sqlite3"
+
+
+class ExpenseRepository:
+    def __init__(self, db_path: Path | None = None):
+        self.db_path = Path(db_path) if db_path is not None else DEFAULT_DB_PATH
+
+    def initialize(self) -> None:
+        with sqlite3.connect(self.db_path) as conn:
+            conn.execute(
+                "CREATE TABLE IF NOT EXISTS expenses "
+                "(id INTEGER PRIMARY KEY, amount TEXT NOT NULL)"
+            )
+
+File: tests/test_db_path.py
+
+import pytest
+
+import expense_repo
+from expense_repo import ExpenseRepository
+
+
+@pytest.fixture
+def repo_and_paths(tmp_path, monkeypatch):
+    db_path = tmp_path / "expenses.sqlite3"
+    guarded_default = tmp_path / "do_not_use_default.sqlite3"
+    monkeypatch.setattr(expense_repo, "DEFAULT_DB_PATH", guarded_default)
+    repository = ExpenseRepository(db_path=db_path)
+    return repository, db_path, guarded_default
+
+
+@pytest.mark.parametrize("case", ["alpha", "beta"])
+def test_database_is_isolated(repo_and_paths, tmp_path, case):
+    repository, db_path, guarded_default = repo_and_paths
+    repository.initialize()
+
+    assert db_path.parent == tmp_path
+    assert db_path.is_file()
+    assert not guarded_default.exists()
+
+    files = sorted(path.name for path in tmp_path.iterdir())
+    print(f"{case}: {db_path} | files: {files}")
+
+From the project root, run:
+python -m pytest -q -s tests/test_db_path.py
+
+Inspect the paths and file lists printed by your own run. Each case should have its own temporary parent directory. The guarded default file should not be created.

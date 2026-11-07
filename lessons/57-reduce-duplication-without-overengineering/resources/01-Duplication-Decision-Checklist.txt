@@ -1,0 +1,22 @@
+Before extracting repeated code:
+
+1. Describe what each block does in plain language.
+2. Confirm that the behavior, edge cases and parameter order match.
+3. Ask whether one requirement change should update every copy.
+4. Separate shared rules from caller-specific behavior.
+5. Choose a narrow name that describes one responsibility.
+6. Run the focused tests and retain the command as a baseline.
+
+During the extraction:
+
+7. Move only the genuinely shared rule.
+8. Keep caller-specific selection, grouping, ordering, output conversion and error behavior with the caller.
+9. Preserve bound parameters rather than inserting values into SQL strings.
+10. Avoid a helper that needs many flags or unrelated inputs.
+
+After the extraction:
+
+11. Run the same focused test command again.
+12. Inspect the diff for changed signatures, behavior or unrelated edits.
+13. Confirm that each caller is easier to understand.
+14. Reject or narrow the abstraction if it hides meaningful differences.

@@ -1,0 +1,8 @@
+Run the focused tests before editing:
+python -m pytest tests/test_sqlite_repository.py -q
+
+Run the same focused tests after editing:
+python -m pytest tests/test_sqlite_repository.py -q
+
+Inspect only the repository patch:
+git diff -- src/expense_tracker/sqlite_repository.py

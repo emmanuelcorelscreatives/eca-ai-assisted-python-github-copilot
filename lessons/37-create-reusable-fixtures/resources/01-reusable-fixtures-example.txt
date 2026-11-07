@@ -1,0 +1,65 @@
+File: expense_tracker/summary.py
+
+from decimal import Decimal
+
+
+def total_amount(expenses: list[dict[str, str]]) -> Decimal:
+    return sum(
+        (Decimal(expense["amount"]) for expense in expenses),
+        start=Decimal("0"),
+    )
+
+
+File: tests/test_summary.py
+
+from decimal import Decimal
+
+import pytest
+
+from expense_tracker.summary import total_amount
+
+
+@pytest.fixture
+def sample_expenses() -> list[dict[str, str]]:
+    return [
+        {"amount": "12.50", "category": "food"},
+        {"amount": "7.50", "category": "transport"},
+        {"amount": "3.00", "category": "food"},
+    ]
+
+
+@pytest.fixture
+def food_expenses(
+    sample_expenses: list[dict[str, str]],
+) -> list[dict[str, str]]:
+    return [
+        expense
+        for expense in sample_expenses
+        if expense["category"] == "food"
+    ]
+
+
+def test_total_amount_adds_all_expenses(
+    sample_expenses: list[dict[str, str]],
+) -> None:
+    assert total_amount(sample_expenses) == Decimal("23.00")
+
+
+def test_total_amount_adds_food_expenses(
+    food_expenses: list[dict[str, str]],
+) -> None:
+    assert total_amount(food_expenses) == Decimal("15.50")
+
+
+Commands:
+
+python -m pytest tests/test_summary.py::test_total_amount_adds_all_expenses -q
+python -m pytest tests/test_summary.py -q
+
+Review checklist:
+
+- Each fixture has one clear purpose.
+- Tests request fixtures through named parameters.
+- A dependent fixture requests its dependency through its own parameter list.
+- Expected results remain visible in the assertions.
+- Fixtures prepare scenarios without recalculating the expected behavior.

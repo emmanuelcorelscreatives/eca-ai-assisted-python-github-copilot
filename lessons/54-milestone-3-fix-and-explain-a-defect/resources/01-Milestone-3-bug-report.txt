@@ -1,0 +1,21 @@
+Defect and requirement:
+Requested input or command:
+Expected result, derived from the requirement:
+Observed pre-fix result:
+
+Reproduction command:
+Pre-fix failure excerpt and exit outcome:
+
+Root cause: Name the operation or comparison that produces the observed result, and explain why.
+Minimal correction:
+Files changed:
+Diff review: List any unrelated changes, or state that none were observed.
+
+Targeted post-fix command and actual outcome:
+Relevant suite command and actual outcome:
+Remaining failures, if any, and their status:
+
+Review decision: Accept, modify, or reject the proposed change.
+Reason for the decision:
+
+Submission: Include this report, the retained regression test, the observed pre-fix failure excerpt, and the actual post-fix test output.

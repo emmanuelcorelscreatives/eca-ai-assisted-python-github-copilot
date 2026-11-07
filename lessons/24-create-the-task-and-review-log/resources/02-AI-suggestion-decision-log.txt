@@ -1,0 +1,34 @@
+# AI suggestion decision log
+
+Make one entry for each suggested change. Record only checks actually performed. Link a completed entry from its task-board item.
+
+## Entry template
+Task and requirement:
+Affected files:
+Suggestion or diff reference:
+Decision: pending | accepted | modified | rejected
+Reason:
+Correctness and security checks:
+Independent verification:
+Remaining limitations:
+
+## Illustrative review — T1
+This is an example candidate, not a record of an actual Copilot response or a completed implementation.
+Task and requirement: T1; parse money according to the existing Decimal-from-string contract.
+Affected files: amount parser; illustrative scope only.
+Suggestion: return float(raw_amount)
+Decision: rejected
+Reason: the money contract requires Decimal parsed from a string; this expression returns float.
+Correctness and security checks: compared the candidate expression with the money contract; other checks not performed.
+Independent verification: compared the expression with the contract; tests not run.
+Remaining limitations: no replacement has been checked.
+
+## T1 — pending review
+Task and requirement: T1; reject invalid add input before a repository write.
+Affected files: to be confirmed from the actual diff.
+Suggestion or diff reference: add after a suggestion is received.
+Decision: pending
+Reason: no suggestion has been reviewed in this entry.
+Correctness and security checks: input boundary, repository write, dependencies, unrelated file changes — not reviewed.
+Independent verification: proposed tests not run; diff not reviewed.
+Remaining limitations: implementation and checks outstanding.

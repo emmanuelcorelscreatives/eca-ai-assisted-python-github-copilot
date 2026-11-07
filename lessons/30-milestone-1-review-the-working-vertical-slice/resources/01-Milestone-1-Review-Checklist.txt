@@ -1,0 +1,124 @@
+MILESTONE 1 REVIEW CHECKLIST
+
+Use only synthetic data in a disposable database. Run all commands from the repository root.
+
+1. RESET THE DISPOSABLE DATABASE
+
+python -c "from pathlib import Path; Path('data/milestone1.db').unlink(missing_ok=True)"
+
+git status --short
+
+Confirm that data/milestone1.db is not tracked or included in the diff.
+
+2. ADD TWO KNOWN EXPENSES
+
+python -m expense_tracker --db data/milestone1.db add --date "2025-03-01" --amount "12.40" --category "food" --description "Team lunch"
+
+python -m expense_tracker --db data/milestone1.db add --date "2025-03-02" --amount "7.60" --category "travel" --description "Bus fare"
+
+Record the assigned identifiers.
+
+3. LIST AND FILTER
+
+python -m expense_tracker --db data/milestone1.db list
+
+python -m expense_tracker --db data/milestone1.db list --category "food"
+
+Check:
+- Both records appear in the unfiltered list.
+- Every field matches the supplied input.
+- Ordering is stable.
+- The food filter includes the food record and excludes the travel record.
+
+4. CHECK TOTALS INDEPENDENTLY
+
+Expected arithmetic:
+- 12.40 + 7.60 = 20.00
+- food = 12.40
+- travel = 7.60
+
+Run:
+
+python -m expense_tracker --db data/milestone1.db summarize
+
+Compare the displayed totals with the arithmetic above.
+
+5. REJECT INVALID INPUT WITHOUT A WRITE
+
+python -m expense_tracker --db data/milestone1.db add --date "2025-03-03" --amount "NaN" --category "office" --description "Invalid sample"
+
+Check:
+- The message identifies the invalid amount.
+- The command reports failure rather than success.
+- The list contains no new record.
+- The overall total remains 20.00.
+
+6. DELETE BY EXPLICIT IDENTIFIER
+
+Replace the sample identifiers if your clean database assigned different ones.
+
+python -m expense_tracker --db data/milestone1.db delete --id 2
+
+python -m expense_tracker --db data/milestone1.db list
+
+python -m expense_tracker --db data/milestone1.db delete --id 999
+
+Check:
+- Only the requested existing record is removed.
+- A missing identifier is distinguished from success.
+- No command claims success when no record was deleted.
+
+7. COMPARE THE DIFF WITH THE REQUIREMENTS
+
+Inspect:
+
+git diff -- src/expense_tracker/cli.py
+git diff -- src/expense_tracker/service.py
+git diff -- src/expense_tracker/repository.py
+
+Confirm:
+- Validated input reaches the repository.
+- Invalid input is rejected before the repository write.
+- Insert, filter and delete values are passed separately from SQL text.
+- Write transactions complete before success is reported.
+- Amount storage and aggregation preserve exact totals.
+- The patch contains no unrelated files, personal data, credentials or disposable database files.
+
+8. RECORD AN AI-SUGGESTION DECISION
+
+Use this structure in docs/review-log.md:
+
+### Decision ID and short name
+Requirement: State the behavior or constraint involved.
+Suggestion: Summarize the proposed change accurately.
+Decision: Accepted, Modified or Rejected.
+Reason: Explain the requirement, defect or risk that determined the decision.
+Change: State what entered the final patch, if anything.
+Evidence: Name the demonstrated command, observed result and relevant diff location.
+
+Example:
+
+### M1-04: Category filter query
+Requirement: Category filtering returns only exact matches and uses bound SQL values.
+Suggestion: Insert category directly into the SQL string.
+Decision: Modified
+Reason: User input must remain separate from the query structure.
+Change: Use WHERE category = ? with (category,).
+Evidence: The repository diff uses a placeholder; list --category food returned only the food expense.
+
+9. PREPARE THE FOCUSED PATCH
+
+git add src/expense_tracker/cli.py src/expense_tracker/service.py src/expense_tracker/repository.py docs/review-log.md
+
+git diff --cached --check
+
+git diff --cached --name-only
+
+git diff --cached
+
+Final checks:
+- The staged names are exactly the intended implementation files and review note.
+- git diff --cached --check produces no output.
+- The staged diff matches the demonstrated requirements.
+- The review note records the decision, reason and evidence.
+- data/milestone1.db is not staged.

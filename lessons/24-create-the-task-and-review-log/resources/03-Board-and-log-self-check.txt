@@ -1,0 +1,7 @@
+- [ ] My board points to the data contract and acceptance cases already written.
+- [ ] Add, list, filter, summarize, and delete requirements have observable proposed checks, including required failure outcomes.
+- [ ] The first task states its requirement, likely affected files, proposed checks, status, and finish condition.
+- [ ] Proposed checks are not described as passing checks.
+- [ ] The decision log can identify the specific suggestion or diff under review.
+- [ ] Each eventual accepted, modified, or rejected decision will have a reason and evidence from checks actually performed.
+- [ ] Any test not run, diff not reviewed, or limitation still open is marked plainly.

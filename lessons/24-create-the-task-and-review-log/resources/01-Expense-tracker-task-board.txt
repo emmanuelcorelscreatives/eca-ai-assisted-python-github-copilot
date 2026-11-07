@@ -1,0 +1,45 @@
+# Expense tracker task board
+
+A task is done only after its proposed checks are run and its change is reviewed. Refer to the existing data contract and acceptance cases for field rules and exact error outcomes.
+
+## T1 — Validated add command
+Status: planned
+Requirement: reject invalid add input before any repository write; follow the existing data contract.
+Likely files: command handler, shared validation, add-command tests. Adjust this list if the actual project structure differs.
+Proposed checks:
+- Valid add input reaches the repository.
+- Invalid amount reports the contract's failure and does not call the repository write.
+Finish: inspect the diff and record actual check results before marking done.
+Decision-log entry: pending.
+
+## T2 — SQLite persistence
+Status: planned
+Requirement: persist a validated expense according to the storage contract.
+Likely files: repository and persistence tests.
+Proposed check: save a known record, reopen the database connection, and retrieve the expected record.
+Finish: review the diff and record the actual result.
+Decision-log entry: pending.
+
+## T3 — Listing and filtering
+Status: planned
+Requirement: list and filter records according to the acceptance cases, with stable ordering.
+Likely files: command handler, application service, repository, and tests as needed.
+Proposed checks: compare the listed identifiers and order with independently chosen records; compare a filtered result with the expected subset.
+Finish: review the diff and record the actual results.
+Decision-log entry: pending.
+
+## T4 — Summaries
+Status: planned
+Requirement: report overall and per-category totals according to the acceptance cases.
+Likely files: application service, command handler, and summary tests.
+Proposed check: calculate expected totals by hand from a small known record set, then compare the reported values.
+Finish: review the diff and record the actual result.
+Decision-log entry: pending.
+
+## T5 — Delete by identifier
+Status: planned
+Requirement: delete only the selected identifier and distinguish a missing identifier from success.
+Likely files: command handler, application service, repository, and tests as needed.
+Proposed checks: verify the selected record is gone and others remain; verify the specified missing-record outcome.
+Finish: review the diff and record the actual results.
+Decision-log entry: pending.

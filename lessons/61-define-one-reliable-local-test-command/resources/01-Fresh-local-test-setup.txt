@@ -1,0 +1,19 @@
+Run from the repository root in Bash, after confirming Python 3.11 is installed and .venv-repro does not already exist. This example assumes requirements-dev.txt declares every external package needed for its tests; preserve any additional dependencies your project requires.
+
+Example requirements-dev.txt:
+pytest==8.3.5
+
+Add to .gitignore:
+.venv-repro/
+
+Commands:
+python3.11 --version
+python3.11 -m venv .venv-repro
+source .venv-repro/bin/activate
+python -c "import sys; print(sys.executable); print(sys.version.split()[0])"
+python -m pip install -r requirements-dev.txt
+python -m pytest
+
+Record the chosen Python version and these setup steps in README.md. Check the terminal’s real test result; do not record a pass unless the intended suite runs successfully.
+
+References: Python virtual environments, https://docs.python.org/3.11/library/venv.html ; Python package installation, https://docs.python.org/3.11/installing/index.html ; pytest usage, https://docs.pytest.org/en/8.3.x/how-to/usage.html

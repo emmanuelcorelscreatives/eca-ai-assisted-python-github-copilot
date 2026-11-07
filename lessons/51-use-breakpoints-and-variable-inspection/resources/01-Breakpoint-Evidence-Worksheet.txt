@@ -1,0 +1,47 @@
+BREAKPOINT EVIDENCE WORKSHEET
+
+Reproduced scenario
+Command or test:
+Input:
+Observed failure:
+
+Requirement
+Expected final result:
+Expected representation at the boundary:
+Expected type or unit:
+
+Breakpoint 1: last trusted location
+File and line:
+Why this location matters:
+Observed value:
+Observed type:
+Observed unit or representation:
+Does it match the requirement? Yes / No
+
+Breakpoint 2: boundary or transformation
+File and line:
+Value before the highlighted line executes:
+Value after one Step Over:
+Observed type after the step:
+Observed unit or representation after the step:
+Does it match the requirement? Yes / No
+
+Persistence evidence
+Bound value or parameter tuple:
+Value read back from storage:
+Final test result:
+
+Conclusion
+First location where observed state differs from expected state:
+Observed fact at that location:
+Requirement used for comparison:
+Connection between the first divergence and the reported symptom:
+
+Inspection discipline
+[ ] Used the same input and test as the normal reproduction
+[ ] Checked whether the highlighted line had executed
+[ ] Inspected value, type, and unit
+[ ] Did not use Set Value
+[ ] Did not edit source code during the run
+[ ] Did not call a state-changing function from the Debug Console
+[ ] Continued far enough to connect the divergence with the original failure

@@ -1,0 +1,45 @@
+TRACEBACK READING CHECKLIST
+
+1. Find the exception line.
+   - Record the exception class.
+   - Record the exact message.
+
+2. Read backward to the nearest project frame.
+   - Note the file and line number.
+   - Ignore unrelated framework frames at first.
+
+3. Identify the smallest failing operation.
+   - Name the operator, function call, conversion, lookup, or assertion that failed.
+   - Do not label the entire function as the failing operation when one expression is more precise.
+
+4. Inspect relevant values.
+   - Record each operand or argument involved in the failing operation.
+   - Include runtime types when they matter.
+   - Use `python -m pytest --showlocals` only when local output is safe to display.
+
+5. Move upward through project frames.
+   - Identify who supplied the values.
+   - Compare the caller’s inputs with the callee’s observed values.
+   - Note whether execution reached the final assertion.
+
+6. Separate evidence from explanation.
+   - Observed symptom: What exception or failed assertion occurred?
+   - Failure site: At which exact operation did execution stop?
+   - Relevant values: What values and types were present?
+   - Possible cause: What earlier event could explain those values?
+
+7. Keep the cause tentative until independently checked.
+
+FINDING TEMPLATE
+
+Observed symptom:
+
+Failure site:
+
+Relevant runtime values:
+
+Caller expectation:
+
+Possible cause:
+
+Evidence still needed:

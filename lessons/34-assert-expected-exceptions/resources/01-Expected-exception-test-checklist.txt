@@ -1,0 +1,18 @@
+For each expected-exception test:
+
+1. Name one concrete invalid input and the rule it violates.
+2. Expect the narrowest exception type promised by the code.
+3. Avoid broad expectations such as Exception when a purpose-specific exception exists.
+4. Put only the operation expected to raise inside the pytest.raises block.
+5. Use match with a stable phrase when the error detail identifies which rule rejected the input.
+6. Remember that match performs a regular-expression search.
+7. Confirm that no exception produces a DID NOT RAISE failure.
+8. Confirm that an unrelated exception is not accepted as the expected rejection.
+9. Repair an unexpected crash instead of broadening the test to include it.
+10. Ask whether the passing test proves the right rule rejected the input.
+
+Focused command:
+python -m pytest tests/test_validation.py::test_parse_amount_rejects_zero -q
+
+File command:
+python -m pytest tests/test_validation.py -q

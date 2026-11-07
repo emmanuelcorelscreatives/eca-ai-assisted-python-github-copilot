@@ -1,0 +1,24 @@
+Create tests/data/categories.json with this content:
+["food", "transport"]
+
+Create tests/test_categories.py with this content:
+from pathlib import Path
+import json
+
+
+def test_default_categories():
+    path = Path('data/categories.json')
+    categories = json.loads(path.read_text(encoding='utf-8'))
+    assert 'food' in categories
+
+From the repository root, compare:
+cd tests
+python -m pytest test_categories.py
+cd ..
+python -m pytest tests/test_categories.py
+
+To remove the working-directory assumption, replace the path assignment with:
+    path = Path(__file__).resolve().parent / 'data' / 'categories.json'
+
+Run both pytest commands again and inspect their actual results. To check the current directory independently, use:
+python -c "import os; print(os.getcwd())"

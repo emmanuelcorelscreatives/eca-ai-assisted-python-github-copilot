@@ -1,0 +1,11 @@
+Requested structural change: ____________________
+Files and functions in the diff: ____________________
+Public signatures and keyword arguments: unchanged / changed; evidence: ____________________
+Exceptions and failure reporting: unchanged / changed; evidence: ____________________
+Ordering and returned values: unchanged / changed; evidence: ____________________
+Unrelated edits to remove or reject: ____________________
+Affected test command: ____________________
+Observed test outcome: ____________________
+Final diff reviewed after testing: yes / no
+Decision: accept / modify / reject / pending
+Reason tied to the diff and observed checks: ____________________

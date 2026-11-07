@@ -1,0 +1,36 @@
+Create an empty file at expense_tracker/__init__.py.
+
+Create expense_tracker/validation.py with this content:
+
+from datetime import date
+from decimal import Decimal, InvalidOperation
+
+
+def amount_is_valid(text: str) -> bool:
+    value_text = text.strip()
+    if not value_text:
+        return False
+
+    try:
+        amount = Decimal(value_text)
+    except InvalidOperation:
+        return False
+
+    return (
+        amount.is_finite()
+        and amount > 0
+        and amount.as_tuple().exponent >= -2
+    )
+
+
+def date_is_valid(text: str) -> bool:
+    value_text = text.strip()
+    if len(value_text) != 10:
+        return False
+
+    try:
+        parsed = date.fromisoformat(value_text)
+    except ValueError:
+        return False
+
+    return parsed.isoformat() == value_text

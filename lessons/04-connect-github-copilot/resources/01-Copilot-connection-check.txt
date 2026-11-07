@@ -1,0 +1,6 @@
+□ In VS Code Extensions, find GitHub Copilot from publisher GitHub; install it if needed.
+□ Follow the VS Code GitHub sign-in action and complete the browser handoff.
+□ Open Chat in VS Code and send a short, non-private question.
+□ Check whether a relevant reply arrives, or follow the access or setup prompt shown.
+□ Find the Copilot status control and search VS Code Settings for “inline suggest”.
+□ If access is unavailable, use the supplied suggestion-and-review examples for practice.

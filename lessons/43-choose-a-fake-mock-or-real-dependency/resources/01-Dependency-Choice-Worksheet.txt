@@ -1,0 +1,52 @@
+DEPENDENCY CHOICE WORKSHEET
+
+Use one block for each behavior.
+
+Behavior:
+Dependency boundary:
+Is the dependency's own behavior part of the requirement? Yes / No
+Choice: real dependency / fake / mock or controlled double / controlled external state / no dependency
+Evidence this test can provide:
+What this test does not prove:
+Real integration test retained elsewhere:
+
+EXAMPLE CLASSIFICATIONS
+
+Behavior: save, close, reopen, and retrieve an expense
+Choice: real file-backed SQLite through the production repository
+Evidence: schema, SQL, transaction behavior, and file persistence
+Does not prove: behavior on every filesystem or operating system
+
+Behavior: apply a service rule against known expense records
+Choice: fake in-memory repository
+Evidence: service behavior against the repository contract
+Does not prove: SQL, schema constraints, transactions, or restart persistence
+
+Behavior: apply a current-day rule
+Choice: fake date provider returning a fixed date
+Evidence: behavior for a known date
+Does not prove: integration with the real system clock
+
+Behavior: read optional configuration
+Choice: controlled process environment value
+Evidence: behavior when the value is present or missing
+Does not prove: deployment configuration outside the test process
+
+Behavior: respond to a selected repository write failure
+Choice: controlled failing repository or mock
+Evidence: application response to the repository failure
+Does not prove: how a real operating system or filesystem produces the failure
+
+Behavior: calculate totals from supplied expenses
+Choice: no external dependency
+Evidence: calculation behavior for the supplied values
+Does not prove: storage or command-line behavior
+
+FINAL CHECK
+
+1. State the behavior the test must prove.
+2. Identify whether the dependency's behavior is part of that claim.
+3. Choose the dependency that preserves the required boundary.
+4. Record the evidence the test provides.
+5. Record what the test does not prove.
+6. Retain a real file-backed SQLite path for persistence checks.

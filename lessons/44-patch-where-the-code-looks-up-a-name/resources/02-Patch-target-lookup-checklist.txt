@@ -1,0 +1,13 @@
+1. Open the module containing the code under test.
+2. Find the exact dependency expression used at the call site.
+3. Read the consumer module’s import statement.
+4. If the consumer directly imported the name, patch that name in the consumer module.
+5. Write the target as a dotted import path in the form consumer_module.attribute.
+6. Keep the call to the code under test inside the active patch context.
+7. Check an observable result that distinguishes the replacement from the original dependency.
+8. If the original dependency still runs, inspect the consumer’s import and call again before adding more mock configuration.
+
+For the demonstration:
+- Definition location: patch_demo.repository.save_expense
+- Runtime lookup location: patch_demo.service.save_expense
+- Correct target: patch_demo.service.save_expense

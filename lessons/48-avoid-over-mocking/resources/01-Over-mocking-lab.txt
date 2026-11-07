@@ -1,0 +1,71 @@
+Create overmock_lab.py:
+
+from contextlib import closing
+from pathlib import Path
+import sqlite3
+
+
+class ExpenseRepository:
+    def __init__(self, path: Path):
+        self.path = path
+        with closing(sqlite3.connect(self.path)) as connection:
+            connection.execute(
+                "CREATE TABLE IF NOT EXISTS expenses ("
+                "id INTEGER PRIMARY KEY, "
+                "amount_cents INTEGER NOT NULL, "
+                "category TEXT NOT NULL)"
+            )
+            connection.commit()
+
+    def add(self, amount_cents: int, category: str) -> int:
+        with closing(sqlite3.connect(self.path)) as connection:
+            cursor = connection.execute(
+                "INSERT INTO expenses (amount_cents, category) VALUES (?, ?)",
+                (amount_cents, "misc"),  # Deliberate defect for this exercise.
+            )
+            connection.commit()
+            return cursor.lastrowid
+
+    def get(self, expense_id: int) -> tuple[int, str] | None:
+        with closing(sqlite3.connect(self.path)) as connection:
+            return connection.execute(
+                "SELECT amount_cents, category FROM expenses WHERE id = ?",
+                (expense_id,),
+            ).fetchone()
+
+
+def record_expense(
+    repository: ExpenseRepository, amount_cents: int, category: str
+) -> int:
+    return repository.add(amount_cents, category)
+
+Create tests/test_overmock_lab.py with just this first test:
+
+from unittest.mock import create_autospec
+
+from overmock_lab import ExpenseRepository, record_expense
+
+
+def test_record_expense_delegates():
+    repository = create_autospec(ExpenseRepository, instance=True)
+    repository.add.return_value = 7
+
+    assert record_expense(repository, 1250, "food") == 7
+    repository.add.assert_called_once_with(1250, "food")
+
+Run: python -m pytest -q tests/test_overmock_lab.py
+
+Then append this test to tests/test_overmock_lab.py without repairing the defect yet:
+
+
+def test_expense_survives_reopening_repository(tmp_path):
+    path = tmp_path / "expenses.db"
+    first = ExpenseRepository(path)
+    expense_id = record_expense(first, 1250, "food")
+
+    reopened = ExpenseRepository(path)
+    assert reopened.get(expense_id) == (1250, "food")
+
+Run again: python -m pytest -q tests/test_overmock_lab.py
+
+Finally, in ExpenseRepository.add, replace the parameter tuple (amount_cents, "misc") with (amount_cents, category). Do not change the SQL or the test assertion. Rerun: python -m pytest -q tests/test_overmock_lab.py

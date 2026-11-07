@@ -1,0 +1,26 @@
+Proposed layout
+expense_tracker/
+  cli.py                 arguments in; messages and exit status out
+  domain.py              expense data and shared rules
+  service.py             coordinate one user request
+  sqlite_repository.py   SQLite operations
+
+Request path
+command -> cli -> service -> domain -> service -> sqlite_repository -> SQLite
+stored result -> service -> cli -> command output
+validation error -> service -> cli -> failure output
+
+Outside inputs
+configured database path -> command-line entry point -> sqlite_repository
+date provider -> service -> relevant domain rule, only when the rule needs today's date
+
+Add request
+Valid data: the service requests validation before asking the repository to save. The repository returns the storage result; the CLI reports success.
+Invalid data: validation rejects the input; the repository receives no write request, and the CLI reports failure.
+Storage failure: the repository reports the failure; the CLI must not report a successful save.
+
+Ownership check
+Terminal wording or exit status -> cli.py
+Shared expense-data rule -> domain.py
+Operation order and coordination -> service.py
+SQLite connection, query, transaction, or stored-row conversion -> sqlite_repository.py

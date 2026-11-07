@@ -1,0 +1,17 @@
+Pull request title: [Short description of the practice change]
+
+## Requirement
+[What should someone be able to observe when this change works?]
+
+## Implementation
+[Which focused change in this branch addresses that requirement? Name the relevant files or behavior without copying the diff.]
+
+## Test evidence
+Command: [The exact command you ran, such as python -m pytest; or Not run]
+Observed result: [Record the result you actually saw, including failures. If not run, give the reason.]
+
+Before opening the pull request:
+- Confirm the base is the baseline branch and compare is the practice branch.
+- Check the commits and files shown in the GitHub comparison.
+- Make the description match the diff and the observed test result.
+- Use a draft pull request if the work is not ready for review.

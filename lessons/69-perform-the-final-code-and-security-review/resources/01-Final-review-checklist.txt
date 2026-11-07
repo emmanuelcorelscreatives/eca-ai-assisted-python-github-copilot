@@ -1,0 +1,9 @@
+1. Identify the branch you intend to merge into. If it is main, inspect committed changes with `git diff --stat main...HEAD` and `git diff main...HEAD`; substitute the actual target branch when needed.
+2. Inspect unfinished changes with `git status --short --untracked-files=all`, `git diff`, and `git diff --cached`. Open relevant untracked files separately. Run `git diff --check` for whitespace problems.
+3. Follow input through each changed SQL query. Bind data values; inspect any variable SQL identifiers or sort fragments against an explicit allowlist. Check write and delete conditions.
+4. Follow configured file paths and every file-creating, replacing, or deleting operation. Check whether ordinary commands can reach an unintended operation.
+5. Follow success and failure paths. Check that save feedback follows a successful save, exceptions are not silently swallowed, and errors do not reveal private data.
+6. Review dependency files and workflow changes. Find the purpose of each new package, version rule, or executable step.
+7. Run `git ls-files`. Inspect tracked and untracked files for credentials, private keys, databases, exports, and personal data. Use `git grep -l -I -E 'password|token|secret|api[_-]?key|BEGIN .*PRIVATE KEY' -- .` to locate possible files for inspection; it is not proof that other files are safe.
+8. Without Copilot, explain one unfamiliar generated function: its callers, inputs, outputs, side effects, and failure behavior. Propose a test that could reveal an unintended side effect.
+9. If a real credential was committed, arrange for revocation or rotation. Removing it from the latest file does not remove its exposure from Git history.

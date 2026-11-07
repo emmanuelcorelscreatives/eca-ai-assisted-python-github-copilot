@@ -1,0 +1,35 @@
+COVERAGE INVESTIGATION
+
+Run the suite with line and branch information:
+python -m pytest --cov=expense_tracker --cov-branch --cov-report=term-missing
+
+For one uncovered route, answer:
+[ ] Which file and line does the report identify?
+[ ] What condition leads to the uncovered route?
+[ ] Which supported input can reach it?
+[ ] What written requirement defines the expected behavior?
+[ ] What observable result should a test assert?
+[ ] What realistic defect would make that test fail?
+[ ] Is this the appropriate test boundary for the behavior?
+
+Example requirement:
+A category must contain at least one non-whitespace character after trimming. An invalid category raises ValueError with the message: category is required
+
+Example test:
+import pytest
+
+from expense_tracker.validation import normalize_category
+
+
+def test_normalize_category_rejects_whitespace_only():
+    with pytest.raises(ValueError, match="^category is required$"):
+        normalize_category("   ")
+
+Run the focused case:
+python -m pytest tests/test_validation.py::test_normalize_category_rejects_whitespace_only
+
+Rerun the complete measurement:
+python -m pytest --cov=expense_tracker --cov-branch --cov-report=term-missing
+
+Decision rule:
+Add the test when it checks required behavior and can detect a meaningful defect. Do not add a test whose only claim is that an uncovered line executed. Coverage points to places to investigate; it does not certify correctness.

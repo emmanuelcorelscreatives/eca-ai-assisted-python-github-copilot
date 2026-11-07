@@ -1,0 +1,57 @@
+Create practice_money_dates.py with this starting code:
+
+from datetime import date
+from decimal import Decimal, InvalidOperation
+
+
+def parse_amount(raw: str) -> Decimal:
+    try:
+        amount = Decimal(float(raw))
+    except (ValueError, InvalidOperation) as exc:
+        raise ValueError('Amount must be a decimal number') from exc
+    return amount
+
+
+def parse_day(raw: str) -> date:
+    return date.fromisoformat(raw)
+
+Before editing, predict what happens for parse_amount('0.1'), parse_amount('NaN'), parse_day('20240229'), and parse_day('2025-02-29'). Repair the two functions so that decimal text goes directly into Decimal, non-finite values are rejected, and dates must have the exact YYYY-MM-DD shape and represent real calendar days.
+
+Check these outcomes after the repair:
+- parse_amount('0.1') == Decimal('0.1') is True.
+- parse_amount('12.40') returns Decimal('12.40').
+- parse_amount('lunch') raises ValueError: Amount must be a decimal number.
+- parse_amount('NaN') and parse_amount('Infinity') raise ValueError: Amount must be finite.
+- parse_day('2024-02-29') returns date(2024, 2, 29).
+- parse_day('20240229') raises ValueError: Date must use YYYY-MM-DD.
+- parse_day('2025-02-29') raises ValueError: Date must be a valid calendar date.
+
+Answer — replace the starting file with:
+
+from datetime import date
+from decimal import Decimal, InvalidOperation
+
+
+def parse_amount(raw: str) -> Decimal:
+    try:
+        amount = Decimal(raw)
+    except InvalidOperation as exc:
+        raise ValueError('Amount must be a decimal number') from exc
+    if not amount.is_finite():
+        raise ValueError('Amount must be finite')
+    return amount
+
+
+def parse_day(raw: str) -> date:
+    digits = raw[:4] + raw[5:7] + raw[8:]
+    if (
+        len(raw) != 10
+        or raw[4] != '-'
+        or raw[7] != '-'
+        or not all(char in '0123456789' for char in digits)
+    ):
+        raise ValueError('Date must use YYYY-MM-DD')
+    try:
+        return date.fromisoformat(raw)
+    except ValueError as exc:
+        raise ValueError('Date must be a valid calendar date') from exc

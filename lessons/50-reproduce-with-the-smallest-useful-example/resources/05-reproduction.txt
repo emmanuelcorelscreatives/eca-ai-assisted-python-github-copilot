@@ -1,0 +1,6 @@
+Input: boundary_expenses.csv
+Record: 2025-03-01,food,12.50
+Command: python repro_case.py boundary_expenses.csv --category food --from-date 2025-03-01 --to-date 2025-03-02
+Expected (inclusive dates): Total: 12.50
+Actual, run 1: Total: 0.00
+Actual, run 2: Total: 0.00

@@ -1,0 +1,31 @@
+PURE LOGIC EXTRACTION CHECKLIST
+
+Before editing
+[ ] Name the behavior that must remain unchanged.
+[ ] Run the relevant existing tests and inspect their real result.
+[ ] Identify the smallest calculation or parsing rule to extract.
+[ ] Identify the existing CLI, application-service, and repository boundaries.
+
+Pure-function boundary
+[ ] Pass required information through arguments.
+[ ] Return a value or raise a specific expected validation exception.
+[ ] Do not read command-line input inside the function.
+[ ] Do not print or write terminal output inside the function.
+[ ] Do not access SQLite, files, environment variables, network services, or the clock.
+[ ] Do not mutate a supplied repository or other external state.
+
+Behavior-preserving edit
+[ ] Move the original conditions and transformations without changing them.
+[ ] Preserve established exception types and messages.
+[ ] Replace the original block with one clearly named function call.
+[ ] Keep CLI interaction in the CLI layer.
+[ ] Keep database operations and transactions in the repository layer.
+[ ] Avoid adding options, validation rules, outputs, or other features.
+
+Verification
+[ ] Add focused tests with independently stated expected values.
+[ ] Include established invalid or boundary inputs.
+[ ] Run the focused test file with "python -m pytest tests/test_validation.py".
+[ ] Run the relevant application, CLI, and repository tests.
+[ ] Inspect the changed-file list and confirm unrelated boundaries were not edited.
+[ ] Treat the real test output and exit status as evidence; do not weaken a test merely to obtain a pass.

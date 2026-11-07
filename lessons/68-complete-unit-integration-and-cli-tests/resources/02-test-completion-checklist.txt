@@ -1,0 +1,34 @@
+FINAL TEST COMPLETION CHECKLIST
+
+Unit rules and calculations
+[ ] Each added case corresponds to an audited requirement or boundary.
+[ ] At least one valid value sits directly beside an invalid boundary value where appropriate.
+[ ] Non-finite decimal values are rejected if the data contract requires finite money values.
+[ ] Calendar-date tests include a clearly valid date and a clearly invalid or disallowed format.
+[ ] Expected totals are written as literal Decimal values derived before the production function runs.
+[ ] The test does not call a production helper to calculate its expected result.
+[ ] The test does not reproduce the production algorithm.
+
+SQLite persistence
+[ ] The database path comes from tmp_path.
+[ ] The test uses the real SQLite repository rather than a mock.
+[ ] The write connection is closed before the record is read again.
+[ ] A new repository or connection reopens the same temporary database path.
+[ ] Retrieved fields are compared with independent literal expectations.
+[ ] Connections are closed even when an assertion or operation fails.
+
+Command behavior
+[ ] The command runs through sys.executable and the package module entry point.
+[ ] The temporary database path is passed explicitly.
+[ ] Standard output and standard error are captured separately.
+[ ] The success test checks the required exit code and observable output.
+[ ] The failure test checks a required nonzero exit code and error destination.
+[ ] A follow-up command proves invalid input did not create a record.
+[ ] Expected wording and exit codes come from the audited contract, not from copying current output.
+
+Final run
+[ ] The focused tests run successfully in isolation.
+[ ] python -m pytest runs from the project root.
+[ ] The complete suite collects the newly added tests.
+[ ] Any failure is resolved by comparing the contract, test expectation, and implementation.
+[ ] The genuine final terminal result is retained as evidence.

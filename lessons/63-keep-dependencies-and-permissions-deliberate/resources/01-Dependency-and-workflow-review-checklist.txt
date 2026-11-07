@@ -1,0 +1,13 @@
+Dependencies
+[ ] Record the project's Python version and runner environment.
+[ ] Review intentional direct development requirements in requirements-dev.txt.
+[ ] Generate requirements-dev.lock from a clean project environment; inspect its entries for unrelated packages.
+[ ] Install from requirements-dev.lock in CI.
+[ ] Document how to regenerate the lock; review direct-requirement and lock-file diffs together.
+
+Actions and access
+[ ] Inspect every uses: reference, its repository owner, relevant README inputs, release notes, and source.
+[ ] For each action, copy any full commit SHA from the release and commit actually reviewed; review changes before updating it.
+[ ] Give a checkout-and-test job permissions: contents: read, without unused write permissions.
+[ ] If later steps do not need authenticated Git operations, set checkout's persist-credentials: false.
+[ ] Review the workflow diff and run the project's tests after intentional updates. Record observed results rather than assuming a pass.

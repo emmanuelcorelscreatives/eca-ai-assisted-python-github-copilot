@@ -1,0 +1,5 @@
+Run on an existing published practice branch with a clean working tree. Check first: git status; git branch --show-current; git ls-files --error-unmatch .gitignore.
+
+Tracked, unstaged file edit: git diff -- .gitignore; git restore -- .gitignore; git diff -- .gitignore; git status --short. Restore only after reading the diff. For a staged edit, inspect git diff --cached -- .gitignore, then use git restore --staged -- .gitignore to unstage that path; inspect the remaining working-file diff before discarding it. git restore -- .gitignore does not delete untracked files.
+
+Published practice commit: git log -1 --oneline; git show --stat HEAD; git show HEAD -- .gitignore; git status. Proceed only when HEAD is the intended commit and the working tree is clean: git revert --no-edit HEAD. Verify with git log -2 --oneline; git show --stat HEAD; git diff HEAD~2 HEAD -- .gitignore; git status. Push the completed revert with git push. If another commit moves HEAD, check the target again rather than assuming HEAD still names the mistake.

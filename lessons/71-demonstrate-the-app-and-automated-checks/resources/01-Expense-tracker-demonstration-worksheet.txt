@@ -1,0 +1,16 @@
+Use a fresh disposable SQLite database and the commands in your project's README. Record its database location: __________. Record the launch command: __________.
+
+Add these synthetic records:
+2025-04-12 | 12.40 | groceries | bread | returned ID: ____
+2025-04-13 | 7.60 | groceries | milk | returned ID: ____
+2025-04-14 | 5.25 | transit | bus | returned ID: ____
+
+Before deletion, check the unfiltered list against all three records. Filter groceries: bread and milk only. Filter transit: bus only. Independently calculated totals: groceries 12.40 + 7.60 = 20.00; transit = 5.25; overall = 25.25. Record observed totals: __________.
+
+Submit an otherwise valid add request with amount not-a-number. Record the observed error and process outcome: __________. List again and confirm no fourth record was saved: __________.
+
+Delete using the returned ID for milk: ____. Confirm bread and bus remain. Independently calculated totals after deletion: groceries = 12.40; transit = 5.25; overall = 17.65. Record observed totals: __________.
+
+Stop and relaunch against the same database file. Record the remaining rows and totals after restart: __________.
+
+Run python -m pytest and record its completed result: __________. Run git rev-parse HEAD and record the commit identifier: __________. In GitHub Actions, record the completed test workflow run for that commit, its conclusion, and its test-job result: __________.
