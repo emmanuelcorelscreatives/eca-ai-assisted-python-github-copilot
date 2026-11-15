@@ -1,6 +1,7 @@
-Run from the project root. Inspect files before staging or committing.
+Run from the isolated starter folder created in lesson 05, not the Academy
+checkout or an unrelated repository. Inspect files before staging or committing.
 
-git init
+git init -b main
 git status --short --untracked-files=all
 
 Create and save .gitignore with one entry per line:
@@ -26,7 +27,7 @@ git status --short --untracked-files=all
 git check-ignore -v .venv/pyvenv.cfg local-data/expenses.csv .env expenses.sqlite3
 
 After reviewing file contents, stage only paths present in your project. For the practice folder shown:
-git add .gitignore README.md requirements-dev.txt src/ tests/
+git add .gitignore README.md requirements-dev.txt expense_tracker/ tests/
 git diff --cached --name-only
 git status --short
 

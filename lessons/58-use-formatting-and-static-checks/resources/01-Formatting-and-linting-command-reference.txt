@@ -1,5 +1,13 @@
 Install Ruff in the selected development environment: python -m pip install ruff
 Check the installed version: python -m ruff --version
+Create a new disposable ruff_style_example.py (stop if that filename exists):
+
+def add( first,second ):
+ return first+second
+
+Copy only that Python into the file. The first format check should report that
+it would reformat the file; after formatting, that same check should pass.
+The function should still return 5 for add(2, 3); formatting is not a behavior fix.
 Check one file's formatting without changing it: python -m ruff format --check ruff_style_example.py
 Format that file: python -m ruff format ruff_style_example.py
 Lint that file: python -m ruff check ruff_style_example.py

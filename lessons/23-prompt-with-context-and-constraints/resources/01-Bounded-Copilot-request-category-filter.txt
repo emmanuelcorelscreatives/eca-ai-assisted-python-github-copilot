@@ -1,4 +1,9 @@
-In this expense-tracker project, expense_tracker/service.py defines list_expenses(repo: ExpenseRepository, category: str | None = None) -> list[Expense]. It currently returns repo.list_all(). Expense has id and category fields. expense_tracker/repository.py provides ExpenseRepository.list_all(), which returns expenses in their existing order.
+Hypothetical interface-design exercise: the following prompt describes an assumed
+starter, not a patch to apply to the root practice app or the separate capstone.
+Review whether its stated context is sufficient; do not invent these files in
+either supplied application or overwrite their existing interfaces.
+
+In this hypothetical expense-tracker project, expense_tracker/service.py defines list_expenses(repo: ExpenseRepository, category: str | None = None) -> list[Expense]. It currently returns repo.list_all(). Expense has id and category fields. expense_tracker/repository.py provides ExpenseRepository.list_all(), which returns expenses in their existing order.
 
 Please propose the smallest patch that filters the returned expenses in the service. If category is None, return every expense in the existing order. Otherwise, match category exactly, preserve order, and return an empty list when there are no matches.
 

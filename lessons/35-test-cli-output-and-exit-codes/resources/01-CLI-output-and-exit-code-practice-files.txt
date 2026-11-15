@@ -13,7 +13,7 @@ def main():
 if __name__ == "__main__":
     main()
 
-Create tests/test_cli.py:
+Create tests/test_demo_cli.py (do not overwrite the existing tests/test_cli.py):
 
 from pathlib import Path
 import subprocess
@@ -46,4 +46,4 @@ def test_invalid_category():
     assert "invalid choice" in result.stderr
     assert "'rent'" in result.stderr
 
-From the project root, run: python -m pytest -q tests/test_cli.py
+From the project root, run: python -m pytest -q tests/test_demo_cli.py

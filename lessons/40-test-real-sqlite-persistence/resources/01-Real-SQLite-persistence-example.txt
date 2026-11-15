@@ -1,4 +1,9 @@
-Create an empty expense_tracker/__init__.py. Save the following two files, then run python -m pytest -q tests/test_repository_persistence.py from the project root.
+Standalone miniature: create a new empty folder outside the course checkout.
+Do not overwrite the root repository.py: its add/list/get/close API differs.
+Create an empty expense_tracker/__init__.py in this new folder. Save the following
+two files, excluding the filename headings, then run
+python -m pytest -q tests/test_repository_persistence.py from that new folder
+with the selected course environment. Expect one passing persistence test.
 
 # expense_tracker/repository.py
 import sqlite3

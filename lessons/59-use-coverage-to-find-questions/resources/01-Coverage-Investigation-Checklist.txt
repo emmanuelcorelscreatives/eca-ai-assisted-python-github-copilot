@@ -1,5 +1,10 @@
 COVERAGE INVESTIGATION
 
+Run from the checkout root with the course environment selected. Provision the
+lesson-local plugin first: python -m pip install pytest-cov
+Record this development dependency using your own project's version policy.
+The supplied root requirements install pytest only; --cov needs this plugin.
+
 Run the suite with line and branch information:
 python -m pytest --cov=expense_tracker --cov-branch --cov-report=term-missing
 
@@ -13,20 +18,25 @@ For one uncovered route, answer:
 [ ] Is this the appropriate test boundary for the behavior?
 
 Example requirement:
-A category must contain at least one non-whitespace character after trimming. An invalid category raises ValueError with the message: category is required
+The root practice parse_amount rejects nonnumeric text with ValueError and
+the message: amount must be a positive finite decimal.
+Inspect your own report before deciding this exception branch needs a test.
 
 Example test:
 import pytest
 
-from expense_tracker.validation import normalize_category
+from expense_tracker.domain import parse_amount
 
 
-def test_normalize_category_rejects_whitespace_only():
-    with pytest.raises(ValueError, match="^category is required$"):
-        normalize_category("   ")
+def test_parse_amount_rejects_non_numeric_text():
+    with pytest.raises(ValueError, match="positive finite decimal"):
+        parse_amount("not-a-number")
+
+If not already present, add this focused case to tests/test_domain.py in your
+practice copy; do not replace that file or duplicate a test already supplied.
 
 Run the focused case:
-python -m pytest tests/test_validation.py::test_normalize_category_rejects_whitespace_only
+python -m pytest tests/test_domain.py::test_parse_amount_rejects_non_numeric_text
 
 Rerun the complete measurement:
 python -m pytest --cov=expense_tracker --cov-branch --cov-report=term-missing

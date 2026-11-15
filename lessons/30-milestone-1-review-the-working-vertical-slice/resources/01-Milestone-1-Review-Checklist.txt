@@ -1,51 +1,54 @@
 MILESTONE 1 REVIEW CHECKLIST
 
-Use only synthetic data in a disposable database. Run all commands from the repository root.
+Use only synthetic data in a new disposable database. This runnable walkthrough
+uses the separate reference, not the limited root add/list app. From the checkout
+root, run cd examples/capstone. Use its Python environment and README. When
+reviewing your own implementation instead, adapt paths to its real layout.
 
-1. RESET THE DISPOSABLE DATABASE
+1. SELECT A NEW DISPOSABLE DATABASE
 
-python -c "from pathlib import Path; Path('data/milestone1.db').unlink(missing_ok=True)"
+python -c "from pathlib import Path; assert not Path('milestone1.db').exists(), 'Choose a new database filename and use it in every command'"
 
 git status --short
 
-Confirm that data/milestone1.db is not tracked or included in the diff.
+Confirm that milestone1.db is not tracked or included in the diff.
 
 2. ADD TWO KNOWN EXPENSES
 
-python -m expense_tracker --db data/milestone1.db add --date "2025-03-01" --amount "12.40" --category "food" --description "Team lunch"
+python -m expense_tracker --database milestone1.db add --date "2025-03-01" --amount "12.40" --category "food" --description "Team lunch"
 
-python -m expense_tracker --db data/milestone1.db add --date "2025-03-02" --amount "7.60" --category "travel" --description "Bus fare"
+python -m expense_tracker --database milestone1.db add --date "2025-03-02" --amount "7.60" --category "transport" --description "Bus fare"
 
 Record the assigned identifiers.
 
 3. LIST AND FILTER
 
-python -m expense_tracker --db data/milestone1.db list
+python -m expense_tracker --database milestone1.db list
 
-python -m expense_tracker --db data/milestone1.db list --category "food"
+python -m expense_tracker --database milestone1.db list --category "food"
 
 Check:
 - Both records appear in the unfiltered list.
 - Every field matches the supplied input.
 - Ordering is stable.
-- The food filter includes the food record and excludes the travel record.
+- The food filter includes the food record and excludes the transport record.
 
 4. CHECK TOTALS INDEPENDENTLY
 
 Expected arithmetic:
 - 12.40 + 7.60 = 20.00
 - food = 12.40
-- travel = 7.60
+- transport = 7.60
 
 Run:
 
-python -m expense_tracker --db data/milestone1.db summarize
+python -m expense_tracker --database milestone1.db summary
 
 Compare the displayed totals with the arithmetic above.
 
 5. REJECT INVALID INPUT WITHOUT A WRITE
 
-python -m expense_tracker --db data/milestone1.db add --date "2025-03-03" --amount "NaN" --category "office" --description "Invalid sample"
+python -m expense_tracker --database milestone1.db add --date "2025-03-03" --amount "NaN" --category "food" --description "Invalid sample"
 
 Check:
 - The message identifies the invalid amount.
@@ -57,11 +60,11 @@ Check:
 
 Replace the sample identifiers if your clean database assigned different ones.
 
-python -m expense_tracker --db data/milestone1.db delete --id 2
+python -m expense_tracker --database milestone1.db delete 2
 
-python -m expense_tracker --db data/milestone1.db list
+python -m expense_tracker --database milestone1.db list
 
-python -m expense_tracker --db data/milestone1.db delete --id 999
+python -m expense_tracker --database milestone1.db delete 999
 
 Check:
 - Only the requested existing record is removed.
@@ -72,9 +75,9 @@ Check:
 
 Inspect:
 
-git diff -- src/expense_tracker/cli.py
-git diff -- src/expense_tracker/service.py
-git diff -- src/expense_tracker/repository.py
+git diff -- expense_tracker/cli.py
+git diff -- expense_tracker/service.py
+git diff -- expense_tracker/sqlite_repository.py
 
 Confirm:
 - Validated input reaches the repository.
@@ -108,7 +111,7 @@ Evidence: The repository diff uses a placeholder; list --category food returned 
 
 9. PREPARE THE FOCUSED PATCH
 
-git add src/expense_tracker/cli.py src/expense_tracker/service.py src/expense_tracker/repository.py docs/review-log.md
+git add expense_tracker/cli.py expense_tracker/service.py expense_tracker/sqlite_repository.py docs/review-log.md
 
 git diff --cached --check
 
@@ -121,4 +124,4 @@ Final checks:
 - git diff --cached --check produces no output.
 - The staged diff matches the demonstrated requirements.
 - The review note records the decision, reason and evidence.
-- data/milestone1.db is not staged.
+- milestone1.db is not staged.

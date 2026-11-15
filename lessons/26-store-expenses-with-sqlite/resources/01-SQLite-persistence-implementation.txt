@@ -1,3 +1,9 @@
+Standalone schema exercise: create a new empty folder outside the course checkout.
+Create expense_tracker/__init__.py as an empty file, then copy the three File:
+sections below into that folder, excluding labels, prose, commands and output.
+Do not replace the root application's models/repository: their APIs differ.
+Run from this new folder using the course Python environment.
+
 File: expense_tracker/models.py
 
 from dataclasses import dataclass
@@ -88,7 +94,8 @@ from expense_tracker.repository import SQLiteExpenseRepository
 
 
 db_path = Path("data/demo.db")
-db_path.unlink(missing_ok=True)
+if db_path.exists():
+    raise FileExistsError("Choose a new disposable database path before running this demo.")
 
 repository = SQLiteExpenseRepository(db_path)
 repository.initialize()
@@ -120,7 +127,7 @@ Command:
 
 python demo_store.py
 
-Expected output for the freshly recreated demonstration database:
+Expected output for a new demonstration database (the demo never deletes an existing file):
 
 saved identifiers: 1, 2
 stored rows: 2

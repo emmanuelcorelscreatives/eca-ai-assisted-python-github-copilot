@@ -1,6 +1,8 @@
-Input: boundary_expenses.csv
+Run from this lesson's resources folder using the course Python environment.
+These are retained example observations; record your own observed outcomes.
+Input: 03-boundary_expenses.csv
 Record: 2025-03-01,food,12.50
-Command: python repro_case.py boundary_expenses.csv --category food --from-date 2025-03-01 --to-date 2025-03-02
+Command: python 01-repro_case.py 03-boundary_expenses.csv --category food --from-date 2025-03-01 --to-date 2025-03-02
 Expected (inclusive dates): Total: 12.50
 Actual, run 1: Total: 0.00
 Actual, run 2: Total: 0.00

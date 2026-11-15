@@ -1,3 +1,15 @@
 Implementation: Require one positive integer ID in the delete command. Have the repository reject invalid direct-call IDs. Execute DELETE FROM expenses WHERE id = ? with (expense_id,) as the bound parameters, inside a transaction. Return true only when rowcount is 1; return false when it is 0. Report success with a zero exit status. Report a missing record clearly with a nonzero exit status; do not report database errors as missing records.
 
-Manual check: Run python -m expense_tracker.cli list and select an ID actually shown. Run python -m expense_tracker.cli delete ID, replacing ID with that number. List again: the selected ID should be absent, while unrelated records retain their IDs and details. Repeat the same delete: expect a missing-record message and a nonzero exit status. Try delete 0: expect a positive-integer argument error and no database write. In Bash, run echo $? immediately after a command to inspect its exit status; in PowerShell, inspect $LASTEXITCODE.
+The root practice app has no delete command. For your own implementation, adapt
+the entry point to your actual CLI. For the supplied runnable reference, change
+from the checkout root into examples/capstone and follow its README to add
+synthetic records to a new disposable file, such as delete-practice.db.
+
+Manual check in examples/capstone:
+python -m expense_tracker --database delete-practice.db list
+python -m expense_tracker --database delete-practice.db delete ID
+
+Replace ID with an identifier actually listed, and keep the same database path.
+List again: only that ID should be absent. Repeat the delete: expect a missing
+record and nonzero status. Try delete 0: expect rejection without a write.
+In Bash inspect echo $? immediately afterward; in PowerShell use $LASTEXITCODE.

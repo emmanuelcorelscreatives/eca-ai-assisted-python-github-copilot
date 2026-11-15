@@ -1,3 +1,10 @@
+Standalone miniature: create a new empty folder outside the course checkout.
+Create an empty expense_tracker/__init__.py and the named files/subfolders below.
+Copy only the Python sections, not the File: labels or prose. Run its pytest
+commands from this new folder with the course environment selected. Do not
+overwrite the root summary.py or tests/test_summary.py: they use a different API
+and contain a regression test that this miniature is not meant to replace.
+
 File: expense_tracker/summary.py
 
 from decimal import Decimal

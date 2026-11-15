@@ -67,17 +67,17 @@ ____________________________________________________________________
 ## 6. Stop rule
 Reject or separate any edit outside the stated scope, even if tests pass.
 
-## Completed example
+## Worked refactor plan (perform in a disposable practice copy)
 
-Stable behavior: Command names, options, accepted inputs, output, errors, exit status, ordering, totals, and SQLite effects remain unchanged.
+Stable behavior: From the checkout root, preserve command names, options, inputs, output, errors, ordering and SQLite effects. Run python -m pytest tests/test_repository.py tests/test_cli.py -q before and after.
 
-Selected improvement: Rename the private helper `_line` to `_format_expense_line` and update only its references.
+Selected improvement: Rename the private helper `_decode` to `_decode_expense_row` and update only its references.
 
-Reason: The new name states that the helper formats one expense for command-line output.
+Reason: The new name states that the helper decodes one SQLite row into an Expense.
 
 In scope:
-- Rename `_line`.
-- Update its two occurrences in `src/expense_tracker/cli.py`.
+- Rename `_decode`.
+- Update its definition and both call sites in `expense_tracker/repository.py`.
 
 Out of scope:
 - Function body or signature changes.
@@ -85,4 +85,4 @@ Out of scope:
 - Validation, filtering, totals, or deletion changes.
 - Database, dependency, or public-interface changes.
 
-Expected diff: One private symbol rename in `src/expense_tracker/cli.py`; no behavioral changes.
+Expected diff: One private symbol rename in `expense_tracker/repository.py`; no behavioral changes.

@@ -25,7 +25,7 @@ Behavior-preserving edit
 Verification
 [ ] Add focused tests with independently stated expected values.
 [ ] Include established invalid or boundary inputs.
-[ ] Run the focused test file with "python -m pytest tests/test_validation.py".
+[ ] Run the focused test file with "python -m pytest tests/test_domain.py".
 [ ] Run the relevant application, CLI, and repository tests.
 [ ] Inspect the changed-file list and confirm unrelated boundaries were not edited.
 [ ] Treat the real test output and exit status as evidence; do not weaken a test merely to obtain a pass.

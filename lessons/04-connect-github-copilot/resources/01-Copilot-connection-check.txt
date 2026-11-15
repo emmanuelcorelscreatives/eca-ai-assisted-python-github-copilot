@@ -3,4 +3,4 @@
 □ Open Chat in VS Code and send a short, non-private question.
 □ Check whether a relevant reply arrives, or follow the access or setup prompt shown.
 □ Find the Copilot status control and search VS Code Settings for “inline suggest”.
-□ If access is unavailable, use the supplied suggestion-and-review examples for practice.
+□ If access is unavailable, use the supplied offline suggestion-and-review exercise in lessons/06-make-one-small-reviewed-change/README.md. No Copilot account is required for that exercise.

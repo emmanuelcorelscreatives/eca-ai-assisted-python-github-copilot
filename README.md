@@ -13,6 +13,23 @@ that example; it does not replace the smaller root practice application.
 
 ## Course materials
 
+### Choose the right workspace
+
+- The runnable practice application lives at the checkout root. Run its setup,
+  `python -m expense_tracker` commands and tests there, not inside `practice/`.
+  It intentionally supports only add/list and selected testing exercises.
+- The independent final reference lives in `examples/capstone`. Change into
+  that folder before running its commands; see its README for the full CLI.
+- Lesson resources containing `File:` sections or numbered Python downloads
+  are exercises to assemble, not patches to install over the root application.
+  Use a new empty folder outside this checkout for each standalone exercise;
+  create the named subfolders and copy only the code into the stated filenames,
+  omitting resource numbering and prose. Use the selected course environment.
+  Never overwrite existing application modules or tests to follow another
+  example. Later implementation checklists may describe your own developing
+  application, rather than capabilities already supplied by the root practice.
+
+
 - [1. Course Introduction and Landing-Page Video](lessons/01-course-introduction-and-landing-page-video/README.md)
 - [2. How AI-Assisted Development Works](lessons/02-how-ai-assisted-development-works/README.md)
 - [3. Set Up Python and the Editor](lessons/03-set-up-python-and-the-editor/README.md)

@@ -4,11 +4,12 @@ Create expense_tracker/validation.py with this content:
 
 from datetime import date
 from decimal import Decimal, InvalidOperation
+import re
 
 
 def amount_is_valid(text: str) -> bool:
     value_text = text.strip()
-    if not value_text:
+    if not re.fullmatch(r"[0-9]+(?:\.[0-9]{1,2})?", value_text):
         return False
 
     try:

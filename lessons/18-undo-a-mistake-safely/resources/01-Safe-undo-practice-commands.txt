@@ -1,5 +1,32 @@
-Run on an existing published practice branch with a clean working tree. Check first: git status; git branch --show-current; git ls-files --error-unmatch .gitignore.
+Use your own disposable starter repository and student-owned remote from lesson 16.
+Start clean: git status; git branch --show-current; git ls-files --error-unmatch .gitignore.
+Stop if any work is unexplained. Create a dedicated branch:
+git switch -c practice/safe-undo
+
+Append the harmless comment # Restore practice to .gitignore and save it.
 
 Tracked, unstaged file edit: git diff -- .gitignore; git restore -- .gitignore; git diff -- .gitignore; git status --short. Restore only after reading the diff. For a staged edit, inspect git diff --cached -- .gitignore, then use git restore --staged -- .gitignore to unstage that path; inspect the remaining working-file diff before discarding it. git restore -- .gitignore does not delete untracked files.
 
-Published practice commit: git log -1 --oneline; git show --stat HEAD; git show HEAD -- .gitignore; git status. Proceed only when HEAD is the intended commit and the working tree is clean: git revert --no-edit HEAD. Verify with git log -2 --oneline; git show --stat HEAD; git diff HEAD~2 HEAD -- .gitignore; git status. Push the completed revert with git push. If another commit moves HEAD, check the target again rather than assuming HEAD still names the mistake.
+For the published-commit exercise, append # Revert practice to .gitignore and save.
+git add -- .gitignore
+git diff --cached -- .gitignore
+git commit -m "Add disposable undo practice comment"
+git push -u student practice/safe-undo
+
+Now inspect the exact new single-parent comment commit, not lesson 17's merge:
+git log -1 --oneline
+git rev-list --parents -n 1 HEAD
+git show HEAD -- .gitignore
+git status --short
+
+Proceed only if HEAD is that one-comment commit, it has exactly one parent and
+the tree is clean. Otherwise stop and identify the intended commit explicitly.
+git revert --no-edit HEAD
+git log -2 --oneline
+git diff HEAD~2 HEAD -- .gitignore
+git status --short
+git push
+
+Expect the two-commit diff for .gitignore to be empty: the comment was added,
+then undone by a new commit. History remains intact. If HEAD moved, recheck the
+target; never revert arbitrary HEAD or rewrite a published branch.
